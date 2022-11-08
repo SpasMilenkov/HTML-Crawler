@@ -1,8 +1,8 @@
 namespace HTML_Crawler_Prototype;
 
-public class Helper
+public static class Helper
 {
-    public string[] Split(string text, char separator)
+    public static string[] Split(string text, char separator)
     {
         //hold the number of times the separator is met in the text
         int sepCount = 0;
@@ -51,12 +51,12 @@ public class Helper
         }
         return splitString;
     }
-    public string Trim(string text)
+    public static string Trim(string text)
     {
         return TrimEnd(TrimStart(text));
     }
 
-    public string TrimStart(string text)
+    public static string TrimStart(string text)
     {
         for (int i = 0; i < text.Length; i++)
         {
@@ -67,7 +67,7 @@ public class Helper
         return "";
     }
 
-    public string TrimEnd(string text)
+    public static string TrimEnd(string text)
     {
         for (int i = text.Length - 1; i > 0; i--)
         {
@@ -77,7 +77,7 @@ public class Helper
 
         return "";
     }
-    public string Slice(string text, int beginning, int ending)
+    public static string Slice(string text, int beginning, int ending)
     {
         string sliced = "";
         for (int i = beginning; i < ending; i++)
@@ -87,7 +87,7 @@ public class Helper
         }
         return sliced;
     }
-    public string Slice(string text, int beginning)
+    public static string Slice(string text, int beginning)
     {
         string sliced = "";
         for (int i = beginning; i < text.Length; i++)
