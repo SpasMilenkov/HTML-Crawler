@@ -3,7 +3,7 @@
 //with the passing of time however now only God knows
 //after you are done bumping your head in the wall trying to fix this 
 //increment the counter below so the next dreaded individual knows what awaits him 
-//hours wasted on this: 17
+//hours wasted on this: 18
 
 using System.Diagnostics;
 
@@ -42,6 +42,7 @@ namespace HTML_Crawler_Prototype
         public static void LoadUi()
         {
             char command = ' ';
+
             do
             {
                 Console.WriteLine("---------------------------------------------------------------------------------------"+
@@ -105,7 +106,7 @@ namespace HTML_Crawler_Prototype
             string value = GetValue(_html, data[0]);
             value = _helper.Slice(_html, 0, _html.Length - (data[0].Length + 3));
             HtmlTree.SetGTree(data[0], "", value, null);
-            
+            _html.Substring(0);
             ParseHtml(value, HtmlTree);
         }
         public static void ParseHtml(string html, GTree<string> parent)
