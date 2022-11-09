@@ -1,4 +1,3 @@
-
 namespace HTML_Crawler_Prototype;
 
 public class Parser
@@ -14,6 +13,8 @@ public class Parser
     public int TotalOpened = 0;
     //keeps the total number of closed tags
     public int TotalClosed = 0;
+    //indexes the document
+    public static int _indexer = 0;
     public void ParseHtml(string html, GTree<string> parent)
     {
         if (html.Length == 0)
@@ -21,18 +22,17 @@ public class Parser
                  return;
         }
 
-        html = Helper.Trim(html);
+        // html = Helper.Trim(html);
         string[] data = GetOpeningTag(html);
         string props = "";
         for (int i = 1; i < data.Length; i++)
             props += data[i];
              
-        html = Helper.Slice(html, data[0].Length + 2);
+        // html = Helper.Slice(html, data[0].Length + 2);
         string value = GetValue(html, data[0]);
 
-        html = Helper.Slice(html, 0, html.Length - (data[0].Length+3));
-
-        if (Closed == true)
+        // html = Helper.Slice(html, 0, html.Length - (data[0].Length+3));
+        if (Closed)
         {
             GTree<string> node = new GTree<string>();
             node.SetGTree(data[0], props, value, parent);
@@ -48,13 +48,14 @@ public class Parser
         //start looking < and > to get the opening html tag
         string nodeData = "";
 
-        for (int j = 0; j < html.Length; j++)
+        for (; _indexer < html.Length; _indexer++)
         {
-            char c = html[j];
+            char c = html[_indexer];
                 
             if (c == '>')
             {
                 Closed = false;
+                _indexer++;
                 return Helper.Split(nodeData, ' ');
             }
                 
@@ -64,18 +65,20 @@ public class Parser
             if (c == '<')
                 Closed = true;
         }
-        throw new Exception("Internal Error");
+        throw new Exception("Opening Tag Error");
     }
 
     public string GetValue(string text, string tag)
     {   
         string val = "";
-        for (int j = 0; j < text.Length; j++)
+        for (; _indexer < text.Length; _indexer++)
         {
-            char c = text[j];
-            if (c == '<' && text[j + 1] == '/')
+            char c = text[_indexer];
+            if (c == '<' && text[_indexer + 1] == '/')
             {
-                string closingTag = GetClosingTag(text, j+2);
+                //skips the </
+                _indexer += 2;
+                string closingTag = GetClosingTag(text);
                 if (tag == closingTag)
                 {
                     Closed = true;
@@ -86,15 +89,15 @@ public class Parser
         }
         return val;
     }
-    public static string GetClosingTag(string html, int i)
+    public static string GetClosingTag(string html)
     {
-        char c = html[i];
+        char c = html[_indexer];
         string tag = "";
-        while (c != '>' && i <html.Length - 1)
+        while (c != '>' && _indexer <html.Length - 1)
         {
             tag += c;
-            i++;
-            c = html[i];
+            _indexer++;
+            c = html[_indexer];
         }
 
         return tag;
