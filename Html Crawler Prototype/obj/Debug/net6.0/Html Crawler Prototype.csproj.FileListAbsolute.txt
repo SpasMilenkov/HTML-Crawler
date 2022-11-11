@@ -1,0 +1,30 @@
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/bin/Debug/net6.0/Html Crawler Prototype
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/bin/Debug/net6.0/Html Crawler Prototype.deps.json
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/bin/Debug/net6.0/Html Crawler Prototype.runtimeconfig.json
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/bin/Debug/net6.0/Html Crawler Prototype.dll
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/bin/Debug/net6.0/ref/Html Crawler Prototype.dll
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/bin/Debug/net6.0/Html Crawler Prototype.pdb
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.csproj.AssemblyReference.cache
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.GeneratedMSBuildEditorConfig.editorconfig
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.AssemblyInfoInputs.cache
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.AssemblyInfo.cs
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.csproj.CoreCompileInputs.cache
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.dll
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/obj/Debug/net6.0/ref/Html Crawler Prototype.dll
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.pdb
+/home/spasmilenkov/repos/HTML-Crawler-Prototype/Html Crawler Prototype/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.genruntimeconfig.cache
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/bin/Debug/net6.0/Html Crawler Prototype
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/bin/Debug/net6.0/Html Crawler Prototype.deps.json
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/bin/Debug/net6.0/Html Crawler Prototype.runtimeconfig.json
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/bin/Debug/net6.0/Html Crawler Prototype.dll
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/bin/Debug/net6.0/ref/Html Crawler Prototype.dll
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/bin/Debug/net6.0/Html Crawler Prototype.pdb
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.csproj.AssemblyReference.cache
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.GeneratedMSBuildEditorConfig.editorconfig
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.AssemblyInfoInputs.cache
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.AssemblyInfo.cs
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.csproj.CoreCompileInputs.cache
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.dll
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/Debug/net6.0/ref/Html Crawler Prototype.dll
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.pdb
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.genruntimeconfig.cache
