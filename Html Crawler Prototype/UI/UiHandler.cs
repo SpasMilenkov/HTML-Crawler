@@ -57,7 +57,7 @@ public class UiHandler
 
                 while ((line = sr.ReadLine()) != null)
                 {
-                    // _parser.Html = _parser.Html += line;
+                    _parser.Html = _parser.Html += line;
                     Console.WriteLine(line);
                 }
             }
@@ -69,7 +69,7 @@ public class UiHandler
             Console.WriteLine("The file could not be read:");
             Console.WriteLine(e.Message);
         }
-        // _parser.ParseHtml(0,  _parser.HtmlTree);
+        _parser.ParseHtml();
     }
 
     public void PrintNode()
