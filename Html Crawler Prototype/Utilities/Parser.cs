@@ -34,8 +34,9 @@ public class Parser
         _indexer++;
         string nodeValue = "";
         char c = Html[_indexer];
-        while (c != '>' && _indexer < Html.Length-1)
+        while (c != '>' && _indexer < Html.Length-1 && c != '<')
         {
+
             nodeValue += c;
             _indexer++;
             c = Html[_indexer];
@@ -49,7 +50,7 @@ public class Parser
 
     public void GetValue(GTree<string> currentNode)
     {
-        if (_indexer >= Html.Length - 1)
+        if (_indexer >= Html.Length - 1 && currentNode == null)
             return;
         _indexer++;
         char c = Html[_indexer];
@@ -64,8 +65,15 @@ public class Parser
         {
             currentNode.Value = textValue;
             TotalClosed++;
-            GetOpeningTag(currentNode.Parent);
+            _indexer += currentNode.Tag.Length + 2;
+            GetValue(currentNode.Parent);
         }
+        GTree<string> childText = new GTree<string>();
+        childText.Tag = "Text";
+        childText.Value = textValue;
+        childText.Parent = currentNode;
+        currentNode.AddChild(childText);
+        
         GTree<string> child = new GTree<string>();
         child.Parent = currentNode;
         currentNode.AddChild(child);
