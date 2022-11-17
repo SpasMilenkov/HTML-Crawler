@@ -16,9 +16,11 @@ public class Parser
     public int TotalClosed = 0;
     //keeps temporary indexing data
     private static int _indexer = 0;
+    //error flag
+    private static bool errorFlag = false; 
     public void ParseHtml()
     {
-        for (int i = 0; i < Html.Length; i++)
+        for (int i = 0; i < Html.Length && errorFlag == false; i++)
         {
             char c = Html[i];
             if (c == '<')
@@ -44,6 +46,7 @@ public class Parser
             _indexer++;
             c = Html[_indexer];
         }
+        // if(Html[_indexer -1 ] == '/')
         string[] props = Helper.Split(nodeValue, ' ');
         currentNode.Tag = props[0];
         Helper.Slice(props, 1, props.Length);
@@ -70,6 +73,22 @@ public class Parser
         //checking if the next thing beginning with < is a closing tag and another node
         if (Html[_indexer + 1] == '/')
         {
+            _indexer += 2;
+            c = Html[_indexer];
+            string closingTag = "";
+            while (c != '>')
+            {
+                closingTag += c;
+                _indexer++;
+                c = Html[_indexer];
+            }
+
+            if (currentNode.Tag != closingTag)
+            {
+                Console.WriteLine($"invalid {currentNode.Tag} closing tag");
+                errorFlag = true;
+                return;
+            }
             currentNode.Value = textValue;
             TotalClosed++;
             _indexer += currentNode.Tag.Length + 2;
