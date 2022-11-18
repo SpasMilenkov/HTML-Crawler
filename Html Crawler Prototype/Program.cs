@@ -1,7 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-//the simple command li
-
-using HTML_Crawler_Prototype;
+﻿using HTML_Crawler_Prototype;
 
 class Program
 {
@@ -11,6 +8,5 @@ class Program
     public static void Main(string[] args)
     {
         _menu.LoadUi();
-        Console.WriteLine("Hello, World!");
     } 
 }
