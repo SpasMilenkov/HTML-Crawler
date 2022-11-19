@@ -1,4 +1,6 @@
-﻿using HTML_Crawler_Prototype;
+﻿using System.Collections;
+using HTML_Crawler_Prototype;
+using KeyValuePair = HTML_Crawler_Prototype.KeyValuePair;
 
 class Program
 {
