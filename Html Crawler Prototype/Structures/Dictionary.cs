@@ -62,6 +62,19 @@ class Dictionary
         }
     }
 
+    public string FindKey(string key)
+    {
+        int hash = Hash(key);
+        var current = _records[hash];
+        while (current != null)
+        {
+            if (current.KeyValuePair.Key == key)
+                return current.KeyValuePair.Value;
+            current = current.Next;
+        }
+
+        return "Not in dictionary";
+    }
     public string this[string key] // indexer
     {
         get
