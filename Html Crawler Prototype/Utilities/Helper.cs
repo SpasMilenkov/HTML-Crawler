@@ -101,12 +101,14 @@ public static class Helper
         return sliced;
 
     }
-    public static string[] Slice(string[] arr, int beginning, int ending)
+    public static string[] Slice(string[] arr, int beginning)
     {
-        string[] sliced = new string[ending - beginning];
-        
-        for (int i = beginning; i < ending; i++)
-            sliced[i] = arr[i];
+        string[] sliced = new string[arr.Length - beginning];
+        int k = 0;
+        for (int i = beginning; i < arr.Length; i++, k++)
+        {
+            sliced[k] = arr[i];
+        }
 
         return sliced;
 
