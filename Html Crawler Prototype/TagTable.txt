@@ -1,0 +1,124 @@
+!--
+!DOCTYPE 
+a
+abbr
+acronym
+address
+applet
+area selfClosing 
+article
+aside
+audio
+b
+base selfClosing
+basefont
+bdi
+bdo
+big
+blockquote
+body
+br selfClosing
+button
+canvas
+caption
+center
+cite
+code
+col selfClosing
+colgroup
+data
+datalist
+dd
+del
+details
+dfn
+dialog
+dir
+div
+dl
+dt
+em
+embed selfClosing
+fieldset
+figcaption
+figure
+font
+footer
+form
+frame
+frameset
+h1
+h2
+h3
+h4
+h5
+h6
+head
+header
+hr selfClosing
+html
+i
+iframe
+img selfClosing
+input
+ins
+kbd
+label
+legend
+li
+link selfClosing
+main
+map
+mark
+meta selfClosing
+meter
+nav
+noframes
+noscript
+object
+ol
+optgroup
+option
+output
+p
+param selfClosing
+picture
+pre
+progress
+q
+rp
+rt
+ruby
+s
+samp
+script
+section
+select
+small
+source selfClosing
+span
+strike
+strong
+style
+sub
+summary
+sup
+svg
+table
+tbody
+td
+template
+textarea
+tfoot
+th
+thead
+time
+title
+tr
+track selfClosing
+tt
+u
+ul
+var
+video
+wbr selfClosing
