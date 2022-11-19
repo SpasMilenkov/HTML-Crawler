@@ -1,4 +1,4 @@
-﻿using HTML_Crawler_Prototype;
+using HTML_Crawler_Prototype;
 class Program
 {
     private static UiHandler _menu = new UiHandler();

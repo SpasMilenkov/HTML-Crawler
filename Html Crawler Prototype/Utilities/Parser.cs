@@ -6,8 +6,6 @@ public class Parser
     //the reason for my existence
     public GTree<string> HtmlTree = new GTree<string>();
     public string Html = "";
-    //checks if a tag is closed
-    public bool Closed = false;
     //checks if a tag is opened
     public bool Opened = false;
     //keeps the total number of opened tags
@@ -18,8 +16,11 @@ public class Parser
     private static int _indexer = 0;
     //error flag
     private static bool errorFlag = false; 
+    //a hashmap containing all valid html tags
+    private static Dictionary _validTags = new Dictionary(130);
     public void ParseHtml()
     {
+        LoadTagsDB();
         for (int i = 0; i < Html.Length && errorFlag == false; i++)
         {
             char c = Html[i];
@@ -46,7 +47,7 @@ public class Parser
             _indexer++;
             c = Html[_indexer];
         }
-        // if(Html[_indexer -1 ] == '/')
+
         string[] props = Helper.Split(nodeValue, ' ');
         currentNode.Tag = props[0];
         Helper.Slice(props, 1, props.Length);
@@ -60,6 +61,17 @@ public class Parser
         //then we reach the bottom of the recursion
         if (_indexer >= Html.Length - 1 && currentNode == null) 
             return;
+        // if (Html[_indexer - 1] == '/')
+        // {
+        //     if (currentNode.Tag != "selfClosing")
+        //     {
+        //         Console.WriteLine($"{currentNode.Tag}invalid closing tag");   
+        //         errorFlag = true;
+        //         return;
+        //     }
+        //     Helper.Slice(props, 1, props.Length);
+        //     GetOpeningTag();
+        // }
         //need to move past the > char 
         _indexer++;
         char c = Html[_indexer];
@@ -126,6 +138,28 @@ public class Parser
             {
                 _indexer = i;
                 break;
+            }
+        }
+    }
+    //parse the TagTable file and load the correct html tags in the 
+    public void LoadTagsDB()
+    {
+        // string[] validTags = File.ReadAllLines("TagTable.txt");
+        // for (int i = 0; i < validTags.Length; i++)
+        // {
+        //     string[] split = Helper.Split(validTags[i], ' ');
+        //     _validTags.Add(split[0], split[1]);
+        // }
+        // Console.WriteLine();
+        
+        using (StreamReader sr = new StreamReader("TagTable.txt"))
+        {
+            string line;
+
+            while ((line = sr.ReadLine()) != null)
+            {
+                string[] split = Helper.Split(line, ' ');
+                _validTags.Add(split[0], split[1]);
             }
         }
     }
