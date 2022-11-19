@@ -28,3 +28,4 @@
 /home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/Debug/net6.0/ref/Html Crawler Prototype.dll
 /home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.pdb
 /home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.genruntimeconfig.cache
+/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/bin/Debug/net6.0/TagTable.txt
