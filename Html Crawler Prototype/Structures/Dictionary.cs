@@ -7,7 +7,6 @@ struct KeyValuePair
 }
 class Dictionary
 {
-
     class LinkedListItem
     {
         public KeyValuePair KeyValuePair;
@@ -15,12 +14,10 @@ class Dictionary
     }
 
     private LinkedListItem[] _records;
-
     public Dictionary(int size)
     {
         _records = new LinkedListItem[size];
     }
-
     public int Hash(string key)
     {
         //hash function
@@ -35,7 +32,6 @@ class Dictionary
         return index;
 
     }
-
     public void Add(string key, string value)
     {
         var index = Hash(key);
@@ -61,7 +57,6 @@ class Dictionary
             _records[index] = current;
         }
     }
-
     public string FindKey(string key)
     {
         int hash = Hash(key);
@@ -72,8 +67,7 @@ class Dictionary
                 return current.KeyValuePair.Value;
             current = current.Next;
         }
-
-        return "Not in dictionary";
+        return null;
     }
     public string this[string key] // indexer
     {
