@@ -6,12 +6,6 @@ public class Parser
     //the reason for my existence
     public GTree<string> HtmlTree = new GTree<string>();
     public string Html = "";
-    //checks if a tag is opened
-    public bool Opened = false;
-    //keeps the total number of opened tags
-    public int TotalOpened = 0;
-    //keeps the total number of closed tags
-    public int TotalClosed = 0;
     //keeps temporary indexing data
     private static int _indexer = 0;
     //error flag
@@ -50,8 +44,19 @@ public class Parser
 
         string[] props = Helper.Split(nodeValue, ' ');
         currentNode.Tag = props[0];
-        Helper.Slice(props, 1, props.Length);
-        GetValue(currentNode);
+        Helper.Slice(props, 1);
+        if (Html[_indexer - 1] == '/')
+        {
+            if (_validTags.FindKey(currentNode.Tag) != "selfClosing")
+            {
+                Console.WriteLine($"{currentNode.Tag}invalid closing tag");   
+                errorFlag = true;
+                return;
+            }
+            currentNode.Parent.AddChild(currentNode);
+            GetValue(currentNode.Parent);
+        }
+        GetValue(currentNode); 
 
     }
 
@@ -59,21 +64,14 @@ public class Parser
     {
         //if current node is null that means we reached the last lvl of depth of the html
         //then we reach the bottom of the recursion
-        if (_indexer >= Html.Length - 1 && currentNode == null) 
+        if (_indexer >= Html.Length - 1 || currentNode == null)
             return;
-        // if (Html[_indexer - 1] == '/')
-        // {
-        //     if (currentNode.Tag != "selfClosing")
-        //     {
-        //         Console.WriteLine($"{currentNode.Tag}invalid closing tag");   
-        //         errorFlag = true;
-        //         return;
-        //     }
-        //     Helper.Slice(props, 1, props.Length);
-        //     GetOpeningTag();
-        // }
+        
+        //it gurmi
+
         //need to move past the > char 
         _indexer++;
+        int check = Html.Length;
         char c = Html[_indexer];
         string textValue = "";
         while (c != '<' && _indexer < Html.Length-1)
@@ -97,13 +95,12 @@ public class Parser
 
             if (currentNode.Tag != closingTag)
             {
+                Console.WriteLine("I broke");
                 Console.WriteLine($"invalid {currentNode.Tag} closing tag");
                 errorFlag = true;
                 return;
             }
             currentNode.Value = textValue;
-            TotalClosed++;
-            _indexer += currentNode.Tag.Length + 2;
             GetValue(currentNode.Parent); //get one level deeper into the html
         }
         //parsing text as a child node for elements that have more than one child
