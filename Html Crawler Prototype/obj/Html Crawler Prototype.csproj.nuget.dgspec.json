@@ -1,26 +1,34 @@
 {
   "format": 1,
   "restore": {
-    "/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/Html Crawler Prototype.csproj": {}
+    "C:\\Users\\Spas Milenkov\\Documents\\HTML-Crawler\\Html Crawler Prototype\\Html Crawler Prototype.csproj": {}
   },
   "projects": {
-    "/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/Html Crawler Prototype.csproj": {
+    "C:\\Users\\Spas Milenkov\\Documents\\HTML-Crawler\\Html Crawler Prototype\\Html Crawler Prototype.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/Html Crawler Prototype.csproj",
+        "projectUniqueName": "C:\\Users\\Spas Milenkov\\Documents\\HTML-Crawler\\Html Crawler Prototype\\Html Crawler Prototype.csproj",
         "projectName": "Html Crawler Prototype",
-        "projectPath": "/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/Html Crawler Prototype.csproj",
-        "packagesPath": "/home/spasmilenkov/.nuget/packages/",
-        "outputPath": "/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/",
+        "projectPath": "C:\\Users\\Spas Milenkov\\Documents\\HTML-Crawler\\Html Crawler Prototype\\Html Crawler Prototype.csproj",
+        "packagesPath": "C:\\Users\\Spas Milenkov\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Spas Milenkov\\Documents\\HTML-Crawler\\Html Crawler Prototype\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/spasmilenkov/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Spas Milenkov\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "https://api.nuget.org/v3/index.json": {}
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://www.myget.org/F/discord-net/api/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
@@ -43,7 +51,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -52,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/dotnet6-6.0.110/sdk/6.0.110/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }

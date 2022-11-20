@@ -98,6 +98,14 @@ public class HtmlParser
                 _indexer++;
                 c = Html[_indexer];
             }
+            string hashed = _validTags.FindKey(closingTag);
+
+            if (hashed == null)
+            {
+                Console.WriteLine($"{currentNode.Tag}invalid closing tag");
+                errorFlag = true;
+                return;
+            }
             currentNode.Value = textValue;
             GetValue(currentNode.Parent); //get one level deeper into the html
         }

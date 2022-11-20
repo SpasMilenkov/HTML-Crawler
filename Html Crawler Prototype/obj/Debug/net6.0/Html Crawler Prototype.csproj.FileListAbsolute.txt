@@ -29,3 +29,19 @@
 /home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.pdb
 /home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/obj/Debug/net6.0/Html Crawler Prototype.genruntimeconfig.cache
 /home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/bin/Debug/net6.0/TagTable.txt
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\bin\Debug\net6.0\TagTable.txt
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\bin\Debug\net6.0\Html Crawler Prototype.exe
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\bin\Debug\net6.0\Html Crawler Prototype.deps.json
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\bin\Debug\net6.0\Html Crawler Prototype.runtimeconfig.json
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\bin\Debug\net6.0\Html Crawler Prototype.dll
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\bin\Debug\net6.0\Html Crawler Prototype.pdb
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\obj\Debug\net6.0\Html Crawler Prototype.csproj.AssemblyReference.cache
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\obj\Debug\net6.0\Html Crawler Prototype.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\obj\Debug\net6.0\Html Crawler Prototype.AssemblyInfoInputs.cache
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\obj\Debug\net6.0\Html Crawler Prototype.AssemblyInfo.cs
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\obj\Debug\net6.0\Html Crawler Prototype.csproj.CoreCompileInputs.cache
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\obj\Debug\net6.0\Html Crawler Prototype.dll
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\obj\Debug\net6.0\refint\Html Crawler Prototype.dll
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\obj\Debug\net6.0\Html Crawler Prototype.pdb
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\obj\Debug\net6.0\Html Crawler Prototype.genruntimeconfig.cache
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\Html Crawler Prototype\obj\Debug\net6.0\ref\Html Crawler Prototype.dll

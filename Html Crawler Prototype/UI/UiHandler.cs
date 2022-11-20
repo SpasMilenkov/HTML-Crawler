@@ -4,6 +4,7 @@ public class UiHandler
 {
     //HARDCODED REMOVE LATER
     private static string _Path = "/home/spasmilenkov/Documents/SAA-uni/html-test.txt";
+    private static string _winPath = @"C:\Users\Spas Milenkov\Downloads\html-test.txt";
 
     //HTML Parsing instance
     private static HtmlParser _parser = new HtmlParser();
@@ -51,7 +52,7 @@ public class UiHandler
     {
         try
         {
-            using (StreamReader sr = new StreamReader(_Path))
+            using (StreamReader sr = new StreamReader(_winPath))
             {
                 string line;
 
