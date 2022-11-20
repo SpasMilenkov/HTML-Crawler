@@ -77,8 +77,11 @@ public class HtmlParser
         _indexer++;
         char c = Html[_indexer];
         string textValue = "";
+        bool emptyString = true;
         while (c != '<' && _indexer < Html.Length-1)
         {
+            if (c != ' ' && c != '\t')
+                emptyString = false;
             textValue += c;
             _indexer++;
             c = Html[_indexer];
@@ -105,12 +108,14 @@ public class HtmlParser
         //      <p>Paragraph text</p>                       |
         //      another text            (if we ignore the paragraph and take this as a string value
         //</div>                        we will end up with "Some text another text" appended on first position)
-        GTree<string> childText = new GTree<string>();
-        childText.Tag = "Text"; //introduce custom text node so that i can keep track of the text in a container
-        childText.Value = textValue;
-        childText.Parent = currentNode;
-        currentNode.AddChild(childText);
-        
+        if (!emptyString)
+        {
+            GTree<string> childText = new GTree<string>();
+            childText.Tag = "Text"; //introduce custom text node so that i can keep track of the text in a container
+            childText.Value = textValue;
+            childText.Parent = currentNode;
+            currentNode.AddChild(childText);
+        }
         //create a new node for the next html container and add it to the parent
         GTree<string> child = new GTree<string>();
         child.Parent = currentNode;
