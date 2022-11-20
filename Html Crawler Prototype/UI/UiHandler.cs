@@ -3,10 +3,10 @@ namespace HTML_Crawler_Prototype;
 public class UiHandler
 {
     //HARDCODED REMOVE LATER
-    private static string _Path = "/home/spasmilenkov/Documents/SAA-uni/medium-test.txt";
+    private static string _Path = "/home/spasmilenkov/Documents/SAA-uni/html-test.txt";
 
     //HTML Parsing instance
-    private static Parser _parser = new Parser();
+    private static HtmlParser _parser = new HtmlParser();
 
     public void LoadUi()
     {
