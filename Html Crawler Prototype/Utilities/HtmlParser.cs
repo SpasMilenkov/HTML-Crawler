@@ -1,7 +1,6 @@
-
 namespace HTML_Crawler_Prototype;
 
-public class Parser
+public class HtmlParser
 {
     //the reason for my existence
     public GTree<string> HtmlTree = new GTree<string>();
@@ -36,7 +35,6 @@ public class Parser
         //checks for incorrect opening of tags inside the opening tag
         while (c != '>' && _indexer < Html.Length-1 && c != '<')
         {
-
             nodeValue += c;
             _indexer++;
             c = Html[_indexer];
@@ -45,9 +43,18 @@ public class Parser
         string[] props = Helper.Split(nodeValue, ' ');
         currentNode.Tag = props[0];
         Helper.Slice(props, 1);
+        string hashed = _validTags.FindKey(currentNode.Tag);
+        
+        if (hashed == null)
+        {
+            Console.WriteLine($"{currentNode.Tag}invalid closing tag");   
+            errorFlag = true;
+            return;
+        }
+        
         if (Html[_indexer - 1] == '/')
         {
-            if (_validTags.FindKey(currentNode.Tag) != "selfClosing")
+            if (hashed != "selfClosing")
             {
                 Console.WriteLine($"{currentNode.Tag}invalid closing tag");   
                 errorFlag = true;
@@ -56,8 +63,7 @@ public class Parser
             currentNode.Parent.AddChild(currentNode);
             GetValue(currentNode.Parent);
         }
-        GetValue(currentNode); 
-
+        GetValue(currentNode);
     }
 
     public void GetValue(GTree<string> currentNode)
@@ -66,12 +72,9 @@ public class Parser
         //then we reach the bottom of the recursion
         if (_indexer >= Html.Length - 1 || currentNode == null)
             return;
-        
-        //it gurmi
 
         //need to move past the > char 
         _indexer++;
-        int check = Html.Length;
         char c = Html[_indexer];
         string textValue = "";
         while (c != '<' && _indexer < Html.Length-1)
@@ -91,14 +94,6 @@ public class Parser
                 closingTag += c;
                 _indexer++;
                 c = Html[_indexer];
-            }
-
-            if (currentNode.Tag != closingTag)
-            {
-                Console.WriteLine("I broke");
-                Console.WriteLine($"invalid {currentNode.Tag} closing tag");
-                errorFlag = true;
-                return;
             }
             currentNode.Value = textValue;
             GetValue(currentNode.Parent); //get one level deeper into the html
@@ -124,31 +119,9 @@ public class Parser
         GetOpeningTag(child);
 
     }
-    //currently unneeded probably gonna remove later
-    public void GetClosingTag(int begin)
-    {
-        int i = begin;
-        for (; i < Html.Length; i++)
-        {
-            char c = Html[i];
-            if (c != '<')
-            {
-                _indexer = i;
-                break;
-            }
-        }
-    }
     //parse the TagTable file and load the correct html tags in the 
     public void LoadTagsDB()
     {
-        // string[] validTags = File.ReadAllLines("TagTable.txt");
-        // for (int i = 0; i < validTags.Length; i++)
-        // {
-        //     string[] split = Helper.Split(validTags[i], ' ');
-        //     _validTags.Add(split[0], split[1]);
-        // }
-        // Console.WriteLine();
-        
         using (StreamReader sr = new StreamReader("TagTable.txt"))
         {
             string line;

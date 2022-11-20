@@ -6,7 +6,7 @@ public class UiHandler
     private static string _Path = "/home/spasmilenkov/Documents/SAA-uni/html-test.txt";
 
     //HTML Parsing instance
-    private static Parser _parser = new Parser();
+    private static HtmlParser _parser = new HtmlParser();
 
     public void LoadUi()
     {
