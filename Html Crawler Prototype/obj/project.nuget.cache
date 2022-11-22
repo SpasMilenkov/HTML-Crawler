@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Qg6Hj4fpZAW1xt5nSuj3ar0IIw6TvfWkftdwZ/67Sv7TOJTj10mQ/3bz+b0ZiajEipifAynRLBbwXcF+LKrtrQ==",
+  "dgSpecHash": "ff8p7eTUUCS+ZDZmYKusRdZE2/CuK7lUWQgt0p6DrWF9IfTWNCxBmyQRJAuxOCdqKIbUycgQ7SJoNpZQwywORg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Spas Milenkov\\Documents\\HTML-Crawler\\Html Crawler Prototype\\Html Crawler Prototype.csproj",
+  "projectFilePath": "/home/spasmilenkov/repos/HTML-Crawler/Html Crawler Prototype/Html Crawler Prototype.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

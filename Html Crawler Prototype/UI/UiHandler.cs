@@ -1,3 +1,4 @@
+using Html_Crawler_Prototype.Utilities;
 namespace HTML_Crawler_Prototype;
 
 public class UiHandler
@@ -8,7 +9,6 @@ public class UiHandler
 
     //HTML Parsing instance
     private static HtmlParser _parser = new HtmlParser();
-
     public void LoadUi()
     {
         char command = ' ';
@@ -32,7 +32,9 @@ public class UiHandler
                     LoadFile();
                     break;
                 case '2':
-                    PrintNode();
+                    Console.WriteLine("Enter Xpath query:");
+                    string input = Console.ReadLine();
+                    _parser.ParseInput(input);
                     break;
                 case '3':
                     SaveDocument();
@@ -52,7 +54,7 @@ public class UiHandler
     {
         try
         {
-            using (StreamReader sr = new StreamReader(_winPath))
+            using (StreamReader sr = new StreamReader(_Path))
             {
                 string line;
 
