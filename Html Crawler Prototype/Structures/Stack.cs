@@ -9,13 +9,15 @@ public class Stack<T>
         _container.Add(value);
     }
 
-    public void Pop()
+    public T Pop()
     {
         if (!IsEmpty())
             throw new Exception("Stack underflow");
         
         var lastEl = _container[_container.Count - 1];
         _container.RemoveAt(_container.Count - 1);
+
+        return lastEl;
     }
     public bool IsEmpty() => _container.Count == 0;
 }
