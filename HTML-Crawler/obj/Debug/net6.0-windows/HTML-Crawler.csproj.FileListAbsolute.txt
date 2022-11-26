@@ -1,0 +1,17 @@
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\bin\Debug\net6.0-windows\HTML-Crawler.exe
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\bin\Debug\net6.0-windows\HTML-Crawler.deps.json
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\bin\Debug\net6.0-windows\HTML-Crawler.runtimeconfig.json
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\bin\Debug\net6.0-windows\HTML-Crawler.dll
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\bin\Debug\net6.0-windows\HTML-Crawler.pdb
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\HTML-Crawler.csproj.AssemblyReference.cache
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\HTML_Crawler.Form1.resources
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\HTML-Crawler.csproj.GenerateResource.cache
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\HTML-Crawler.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\HTML-Crawler.AssemblyInfoInputs.cache
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\HTML-Crawler.AssemblyInfo.cs
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\HTML-Crawler.csproj.CoreCompileInputs.cache
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\HTML-Crawler.dll
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\refint\HTML-Crawler.dll
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\HTML-Crawler.pdb
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\HTML-Crawler.genruntimeconfig.cache
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\ref\HTML-Crawler.dll

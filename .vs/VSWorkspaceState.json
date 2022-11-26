@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Html Crawler Prototype",
+    "\\Html Crawler Prototype\\Utilities"
   ],
+  "SelectedNode": "\\Html Crawler Prototype\\Utilities\\HtmlParser.cs",
   "PreviewInSolutionExplorer": false
 }
