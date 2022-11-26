@@ -9,6 +9,7 @@ public class GTree<T>
     //keep the connection to the parent element
     public GTree<T> Parent { get; set; }
     public  string Value { get; set; }
+    public int Depth { get; set; }
 
     //hold the child nodes that are connected to this one
     //using linked list is necessary because the html DOM is not binary tree
