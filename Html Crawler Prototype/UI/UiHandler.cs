@@ -34,7 +34,7 @@ public class UiHandler
                 case '2':
                     Console.WriteLine("Enter Xpath query:");
                     string input = Console.ReadLine();
-                    _parser.ParseInput(input);
+                    // _parser.ParseInput(input);
                     break;
                 case '3':
                     SaveDocument();
@@ -57,10 +57,10 @@ public class UiHandler
             using (StreamReader sr = new StreamReader(_Path))
             {
                 string line;
-
+            
                 while ((line = sr.ReadLine()) != null)
                 {
-                    _parser.Html = _parser.Html += line;
+                    // _parser.Html = _parser.Html += line;
                     Console.WriteLine(line);
                 }
             }
@@ -72,6 +72,7 @@ public class UiHandler
             Console.WriteLine("The file could not be read:");
             Console.WriteLine(e.Message);
         }
+        _parser.Html = File.ReadAllText(_Path);
         _parser.ParseHtml();
     }
 
