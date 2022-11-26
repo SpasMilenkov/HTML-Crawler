@@ -1,3 +1,4 @@
+using System.Security.Authentication.ExtendedProtection;
 using HTML_Crawler_Prototype;
 
 namespace Html_Crawler_Prototype.Utilities;
@@ -12,7 +13,7 @@ public class HtmlParser
     //error flag
     private static bool errorFlag = false;
     private int _closedTags = 0;
-    private int _OpenedTags = 0;
+    private int _openedTags = 0;
     //a hashmap containing all valid html tags
     private static Dictionary _validTags = new Dictionary(130);
     private int _depth = 1;
@@ -31,15 +32,15 @@ public class HtmlParser
 
         // GetOpeningTag(HtmlTree);
         IterativeParse();
-        if (_closedTags != _OpenedTags)
+        if (_closedTags != _openedTags)
         {
             Console.WriteLine("Invalid document! Tags are missing");
         }
     }
     public void IterativeParse()
     {
-        try
-        {
+        // try
+        // {
             GTree<string> currentNode = new GTree<string>();
             Html.TrimStart();
             Html.TrimEnd();
@@ -62,12 +63,15 @@ public class HtmlParser
                         nodeValue += Html[i];
                         i++;
                     }
-
                     string[] nodeEls = Helper.Split(nodeValue, ' ');
                     currentNode.Tag = nodeEls[0];
                     string hashed = _validTags.FindKey(currentNode.Tag);
+
+                    if(nodeEls.Length > 1)
+                        for (int j = 1; j < nodeEls.Length; j++)
+                            currentNode.Props.Add(nodeEls[j]);
                     
-                    if (nodeEls[^1] == "/")
+                    if (Html[i-1] == '/')
                     {
                         if (hashed != "selfClosing")
                         {
@@ -79,7 +83,7 @@ public class HtmlParser
                         currentNode = currentNode.Parent;
                         continue;
                     }
-                    _OpenedTags++;
+                    _openedTags++;
                 }
                 bool emptyString = true;
                 i++;
@@ -136,11 +140,11 @@ public class HtmlParser
                 }
                 currentNode = child;
             }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Parsing Error please. Please check your input again!");
-        }
+        // }
+        // catch (Exception e)
+        // {
+        //     Console.WriteLine("Parsing Error please. Please check your input again!");
+        // }
     }
     public void GetOpeningTag(GTree<string>? currentNode)
     {
@@ -163,6 +167,10 @@ public class HtmlParser
         Helper.Slice(props, 1);
         string hashed = _validTags.FindKey(currentNode.Tag);
         
+        if(props.Length > 1)
+            for (int j = 1; j < props.Length; j++)
+                currentNode.Props.Add(props[j]);
+        
         if (hashed == null)
         {
             Console.WriteLine($"{currentNode.Tag}invalid tag");   
@@ -182,7 +190,7 @@ public class HtmlParser
             GetValue(currentNode.Parent);
             return;
         }
-        _OpenedTags++;
+        _openedTags++;
         GetValue(currentNode);
     }
 
@@ -265,7 +273,7 @@ public class HtmlParser
         using (StreamReader sr = new StreamReader("TagTable.txt"))
         {
             string line;
-
+    
             while ((line = sr.ReadLine()) != null)
             {
                 string[] split = Helper.Split(line, ' ');
@@ -273,7 +281,6 @@ public class HtmlParser
             }
         }
     }
-
     public void Search()
     {
         
