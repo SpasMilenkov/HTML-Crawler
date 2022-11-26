@@ -5,7 +5,7 @@ public class GTree<T>
     //holds the node tag
     public T Tag { get; set; }
     //holds the node s props (id, class)
-    public string[] Props { get; set; }
+    public List<string> Props = new List<string>(); 
     //keep the connection to the parent element
     public GTree<T> Parent { get; set; }
     public  string Value { get; set; }
