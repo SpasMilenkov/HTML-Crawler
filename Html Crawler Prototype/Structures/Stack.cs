@@ -1,10 +1,10 @@
 namespace HTML_Crawler_Prototype;
 
-public class Stack<T>
+public class MyStack<T>
 {
     private List<T> _container;
 
-    public Stack()
+    public MyStack()
     {
         _container = new List<T>();
     }
