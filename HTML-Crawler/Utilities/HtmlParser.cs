@@ -314,7 +314,7 @@ public class HtmlParser
         while (unvisited != null)
         {
             var visiting = unvisited.Pop();
-            
+           
         }
         return result;
     }
