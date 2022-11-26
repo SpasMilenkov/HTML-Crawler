@@ -2,21 +2,21 @@ namespace HTML_Crawler_Prototype;
 
 public class Queue<T>
 {
-    private LinkedList<T> _container = new LinkedList<T>();
+    private List<T> _container = new List<T>();
     
-    public void Push(T value)
+    public void Enqueue(T value)
     {
-        _container.AddFirst(value);
+        _container.Add(value);
     }
 
-    public T Pop()
+    public T Dequeue()
     {
-        if (!IsEmpty())
+        if (IsEmpty())
             throw new Exception("Queue underflow");
         
-        var firstEl = _container.First();
-        _container.Remove(firstEl);
-        return firstEl.Value;
+        var firstEl = _container[0];
+        _container.RemoveAt(0);
+        return firstEl;
     }
-    public bool IsEmpty() =>  _container.First() == null;
+    public bool IsEmpty() =>  _container.Count == 0;
 }
