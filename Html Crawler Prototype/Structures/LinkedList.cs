@@ -107,6 +107,7 @@ namespace HTML_Crawler_Prototype
     }
     //returns the first element in the list
     public Node First() => Head;
+    public Node Last() => Tail;
     
     public Node AddAfter(Node node, T value)
     {
@@ -148,16 +149,16 @@ namespace HTML_Crawler_Prototype
     }
     public void Remove(Node node)
     {
-        if (node.Next != null)
+        if (node?.Next != null)
             node.Next.Prev = node.Prev;
         else
-            Tail = node.Prev;
+            Tail = node?.Prev;
         
-        if (node.Prev != null)
+        if (node?.Prev != null)
             node.Prev.Next = node.Next;
         
         else
-            Head = node.Next;
+            Head = node?.Next;
         
     }
 }
