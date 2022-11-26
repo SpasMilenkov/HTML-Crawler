@@ -91,6 +91,8 @@ public class HtmlParser
                     continue;
                 while (i <= Html.Length-1 && Html[i] != '<' )
                 {
+                    if (Html[i] != ' ' && Html[i] != '\t' && Html[i] !='\n')
+                        emptyString = false;
                     value += Html[i];
                     i++;
                 }
@@ -209,7 +211,7 @@ public class HtmlParser
         bool emptyString = true;
         while (c != '<' && _indexer < Html.Length-1)
         {
-            if (c != ' ' && c != '\t')
+            if (c != ' ' && c != '\t' && c!= '\n')
                 emptyString = false;
             textValue += c;
             _indexer++;
@@ -281,8 +283,47 @@ public class HtmlParser
             }
         }
     }
-    public void Search()
+    
+    //Parse the user query
+    public void ParseInput(string input)
     {
         
+        
+        // switch ()
+        // {
+        //     case "PRINT":
+        //         PrintNode(SearchNode());
+        //         break;
+        //     case "SET":
+        //         SetNode(SearchNode());
+        //         break;
+        //     case "COPY":
+        //         CopyNode(SearchNode());
+        //         break;
+        // }
+    }
+    private GTree<string> SearchNode()
+    {
+        throw new NotImplementedException();
+    }
+    private string PrintNode(GTree<string> node)
+    {
+        string result = "";
+        var unvisited = new MyStack<GTree<string>>();
+        unvisited.Push(node);
+        while (unvisited != null)
+        {
+            var visiting = unvisited.Pop();
+            
+        }
+        return result;
+    }
+    private void SetNode(GTree<string> node)
+    {
+        throw new NotImplementedException();
+    }
+    private void CopyNode(GTree<string> node)
+    {
+        throw new NotImplementedException();
     }
 }
