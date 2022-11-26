@@ -32,23 +32,21 @@ public static class Helper
         string currentSplit = "";
         for (int j = 0; j < text.Length; j++)
         {
-            char c = text[j];
-            if (c == separator )
+            if (text[j] == separator )
             {
                 splitString[i] = currentSplit;
                 currentSplit = "";
                 i++;
                 j++;
-                c = text[j];
             }
             
             if (j == text.Length-1)
             {
-                currentSplit += c;
+                currentSplit += text[j];
                 splitString[i] = currentSplit;
                 return splitString;
             }
-            currentSplit += c;
+            currentSplit += text[j];
         }
         return splitString;
     }

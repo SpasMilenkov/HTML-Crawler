@@ -34,7 +34,7 @@ public class UiHandler
                 case '2':
                     Console.WriteLine("Enter Xpath query:");
                     string input = Console.ReadLine();
-                    // _parser.ParseInput(input);
+                    _parser.ParseInput(input);
                     break;
                 case '3':
                     SaveDocument();
