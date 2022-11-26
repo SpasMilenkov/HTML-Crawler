@@ -5,20 +5,28 @@ public class GTree<T>
     //holds the node tag
     public T Tag { get; set; }
     //holds the node s props (id, class)
-    public string[] Props { get; set; }
+    public List<string> Props = new List<string>(); 
     //keep the connection to the parent element
     public GTree<T> Parent { get; set; }
     public  string Value { get; set; }
+    public int Depth { get; set; }
 
     //hold the child nodes that are connected to this one
     //using linked list is necessary because the html DOM is not binary tree
     //the amount of child nodes are not limited to 2
-    private LinkedList<GTree<T>> _childNodes = new LinkedList<GTree<T>>();
+    public LinkedList<GTree<T>> _childNodes = new LinkedList<GTree<T>>();
     
     //adds new child to the child nodes list
     public void AddChild(GTree<T> child)
     {
-        _childNodes.AddFirst(child);
+        if (_childNodes.First() == null)
+        {
+            _childNodes.AddFirst(child);
+            return;
+        }
+
+        _childNodes.AddLast(child);
+
     }
     //gets a child from the node s child list based on a parameter
     //WORK IN PROGRESS
