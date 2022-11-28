@@ -287,8 +287,6 @@ public class HtmlParser
     //Parse the user query
     public void ParseInput(string input)
     {
-        
-        
         // switch ()
         // {
         //     case "PRINT":

@@ -10,11 +10,11 @@ public class GTree<T>
     public GTree<T> Parent { get; set; }
     public  string Value { get; set; }
     public int Depth { get; set; }
-
+    public bool Visited = false;
     //hold the child nodes that are connected to this one
     //using linked list is necessary because the html DOM is not binary tree
     //the amount of child nodes are not limited to 2
-    public LinkedList<GTree<T>> _childNodes = new LinkedList<GTree<T>>();
+    public MyLinkedList<GTree<T>> _childNodes = new MyLinkedList<GTree<T>>();
     
     //adds new child to the child nodes list
     public void AddChild(GTree<T> child)
@@ -25,7 +25,7 @@ public class GTree<T>
             return;
         }
 
-        _childNodes.AddLast(child);
+        _childNodes.AddLast (child);
 
     }
     //gets a child from the node s child list based on a parameter

@@ -54,7 +54,7 @@ public class UiHandler
     {
         try
         {
-            using (StreamReader sr = new StreamReader(_Path))
+            using (StreamReader sr = new StreamReader(_winPath))
             {
                 string line;
             
@@ -72,7 +72,7 @@ public class UiHandler
             Console.WriteLine("The file could not be read:");
             Console.WriteLine(e.Message);
         }
-        _parser.Html = File.ReadAllText(_Path);
+        _parser.Html = File.ReadAllText(_winPath);
         _parser.ParseHtml();
     }
 

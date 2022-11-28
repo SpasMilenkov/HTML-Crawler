@@ -1,6 +1,6 @@
 namespace HTML_Crawler_Prototype
 {
-    public class LinkedList<T>
+    public class MyLinkedList<T>
 {
     public class Node
     {
@@ -14,7 +14,7 @@ namespace HTML_Crawler_Prototype
 
     private Node Head, Tail; //initialize the first and last element of the list
 
-    public LinkedList()
+    public MyLinkedList()
     {
         Head = Tail = null; //set the first and last linked list element to be null by default
     }
