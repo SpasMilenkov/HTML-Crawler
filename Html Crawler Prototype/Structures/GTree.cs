@@ -11,6 +11,7 @@ public class GTree<T>
     public  string Value { get; set; }
     public int Depth { get; set; }
     public bool Visited = false;
+    public bool SelfClosing = false;
     //hold the child nodes that are connected to this one
     //using linked list is necessary because the html DOM is not binary tree
     //the amount of child nodes are not limited to 2
