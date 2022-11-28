@@ -1,6 +1,8 @@
+using System.ComponentModel;
+
 namespace HTML_Crawler_Prototype;
 
-public class Queue<T>
+public class MyQueue<T>
 {
     private List<T> _container = new List<T>();
     
@@ -17,6 +19,13 @@ public class Queue<T>
         var firstEl = _container[0];
         _container.RemoveAt(0);
         return firstEl;
+    }
+    public T? Peek()
+    {
+        T t = default(T);
+        if (IsEmpty())
+            return t;
+        return _container[0];
     }
     public bool IsEmpty() =>  _container.Count == 0;
 }
