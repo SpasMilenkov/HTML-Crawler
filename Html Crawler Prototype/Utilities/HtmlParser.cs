@@ -79,6 +79,8 @@ public class HtmlParser
                             errorFlag = true;
                             return;
                         }
+                        _openedTags++;
+                        _closedTags++;
                         currentNode.Parent.AddChild(currentNode);
                         currentNode = currentNode.Parent;
                         continue;
@@ -287,36 +289,62 @@ public class HtmlParser
     //Parse the user query
     public void ParseInput(string input)
     {
-        
-        
-        // switch ()
-        // {
-        //     case "PRINT":
-        //         PrintNode(SearchNode());
-        //         break;
-        //     case "SET":
-        //         SetNode(SearchNode());
-        //         break;
-        //     case "COPY":
-        //         CopyNode(SearchNode());
-        //         break;
-        // }
-    }
-    private GTree<string> SearchNode()
-    {
-        throw new NotImplementedException();
-    }
-    private string PrintNode(GTree<string> node)
-    {
-        string result = "";
-        var unvisited = new MyStack<GTree<string>>();
-        unvisited.Push(node);
-        while (unvisited != null)
+
+        string[] split =  Helper.Split(input, ' ');
+        string operation = split[0];
+        string queue = "";
+        GTree<string> subTree = HtmlTree;
+        var results = new List<GTree<string>>();
+        for (int i = 1; i < split.Length; i++)
+            queue += split[i];
+        queue = Helper.Slice(queue, 2, queue.Length - 1);
+        string[] path = Helper.Split(queue, '/');
+
+        SearchNode(path, subTree);
+
+        switch (split[0])
         {
-            var visiting = unvisited.Pop();
-            
+            //case "PRINT":
+            //    PrintNode(SearchNode(splitQueue));
+            //    break;
+            //case "SET":
+            //    SetNode(SearchNode(splitQueue));
+            //    break;
+            //case "COPY":
+            //    CopyNode(SearchNode(splitQueue));
+            //    break;
+            case "//":
+                //PrintNode(HtmlTree);
+                break;
         }
-        return result;
+    }
+    private List<GTree<string>> SearchNode(string[] userPath, GTree<string> subtree)
+    {
+        List<GTree<string>> subTrees = new List<GTree<string>>();
+        MyQueue<GTree<string>> unvisited = new MyQueue<GTree<string>>();
+        int depth = 1;
+        unvisited.Enqueue(subtree);
+        while (!unvisited.IsEmpty())
+        {
+            var currentNode = unvisited.Dequeue();
+            if (depth < userPath.Length - 1 && currentNode.Tag == userPath[depth])
+            {
+                var node = currentNode._childNodes.First();
+                while (node != null)
+                {
+                    unvisited.Enqueue(node.Value);
+                    node = node.Next;
+                }
+            }
+            if (depth == userPath.Length - 1 && currentNode.Tag == userPath[depth])
+                subTrees.Add(currentNode);
+
+            if (currentNode.Depth != unvisited.Peek()?.Depth)
+                depth++;
+
+        }
+
+        return subTrees;
     }
     private void SetNode(GTree<string> node)
     {
