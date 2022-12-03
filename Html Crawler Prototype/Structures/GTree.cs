@@ -29,15 +29,4 @@ public class GTree<T>
         _childNodes.AddLast (child);
 
     }
-    //gets a child from the node s child list based on a parameter
-    //WORK IN PROGRESS
-    public GTree<T> GetChild(int i)
-    {
-        var current = _childNodes.First();
-        while (current != null)
-        {
-            current = current.Next;
-        }
-        return null;
-    }
 }

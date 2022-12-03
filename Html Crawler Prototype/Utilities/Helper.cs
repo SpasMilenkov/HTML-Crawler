@@ -46,6 +46,7 @@ public static class Helper
                 splitString[i] = currentSplit;
                 return splitString;
             }
+
             currentSplit += text[j];
         }
         return splitString;
