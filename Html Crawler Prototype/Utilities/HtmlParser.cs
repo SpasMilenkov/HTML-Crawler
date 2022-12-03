@@ -39,8 +39,8 @@ public class HtmlParser
     }
     public void IterativeParse()
     {
-        // try
-        // {
+        try
+        {
             GTree<string> currentNode = new GTree<string>();
             Html.TrimStart();
             Html.TrimEnd();
@@ -70,7 +70,8 @@ public class HtmlParser
                     if(nodeEls.Length > 1)
                         for (int j = 1; j < nodeEls.Length; j++)
                             currentNode.Props.Add(nodeEls[j]);
-                    
+                    _depth++;
+
                     if (Html[i-1] == '/')
                     {
                         if (hashed != "selfClosing")
@@ -79,10 +80,12 @@ public class HtmlParser
                             errorFlag = true;
                             return;
                         }
+                        _depth--;
                         _openedTags++;
                         _closedTags++;
-                        currentNode.Parent.AddChild(currentNode);
+                        currentNode.Depth = _depth;
                         currentNode = currentNode.Parent;
+                        currentNode.SelfClosing = true;
                         continue;
                     }
                     _openedTags++;
@@ -118,8 +121,8 @@ public class HtmlParser
                     _closedTags++;
                     currentNode.Value = value;
                     _depth--;
-                    currentNode.Depth = _depth;
-                    currentNode = currentNode.Parent;
+                currentNode.Depth = _depth;
+                currentNode = currentNode.Parent;
                     continue;
                 }
                 if (!emptyString)
@@ -136,7 +139,6 @@ public class HtmlParser
                 child.Parent = currentNode;
                 currentNode.AddChild(child);
                 currentNode.Value = value;
-                _depth++;
                 //get the opening tag and properties of the newly found child element
                 if (nodeValue == "html")
                 {
@@ -144,11 +146,11 @@ public class HtmlParser
                 }
                 currentNode = child;
             }
-        // }
-        // catch (Exception e)
-        // {
-        //     Console.WriteLine("Parsing Error please. Please check your input again!");
-        // }
+        }
+         catch (Exception e)
+         {
+             Console.WriteLine("Parsing Error please. Please check your input again!");
+         }
     }
     public void GetOpeningTag(GTree<string>? currentNode)
     {
@@ -295,10 +297,15 @@ public class HtmlParser
         string queue = "";
         GTree<string> subTree = HtmlTree;
         var results = new List<GTree<string>>();
+
         for (int i = 1; i < split.Length; i++)
             queue += split[i];
+
         queue = Helper.Slice(queue, 2, queue.Length - 1);
         string[] path = Helper.Split(queue, '/');
+
+        if (path[0] == "")
+            path = Helper.Slice(path, 1);
 
         SearchNode(path, subTree);
 
@@ -322,12 +329,48 @@ public class HtmlParser
     {
         List<GTree<string>> subTrees = new List<GTree<string>>();
         MyQueue<GTree<string>> unvisited = new MyQueue<GTree<string>>();
-        int depth = 1;
+        int depth = 0;
         unvisited.Enqueue(subtree);
         while (!unvisited.IsEmpty())
         {
             var currentNode = unvisited.Dequeue();
-            if (depth < userPath.Length - 1 && currentNode.Tag == userPath[depth])
+            string[] complexInput = Helper.Split(userPath[depth], '[');
+            if(complexInput.Length > 1)
+            {
+                string tag = complexInput[0];
+                string param = Helper.Slice(complexInput[1], 0, complexInput[1].Length - 1);
+                int elementPosition = 0;
+                if(int.TryParse(param, out elementPosition))
+                {
+                    int index = 1;
+                    while (!unvisited.IsEmpty())
+                    {
+                        if (tag == currentNode.Tag && index == elementPosition)
+                        {
+                            if(depth == userPath.Length - 1)
+                            {
+                                subTrees.Add(currentNode);
+                                return subTrees;
+                            }
+                            var childNode = currentNode._childNodes.First();
+                            while(childNode != null)
+                            {
+                                unvisited.Enqueue(childNode.Value);
+                                childNode = childNode.Next;
+                            }
+                            index++;
+                            depth++;
+                        }
+                        else if(tag == currentNode.Tag && index != elementPosition)
+                            index++;
+
+                        currentNode = unvisited.Dequeue();
+                    }
+                }
+            }
+
+            if (depth < userPath.Length - 1 &&
+                (currentNode.Tag == userPath[depth] || userPath[depth] == "*"))
             {
                 var node = currentNode._childNodes.First();
                 while (node != null)
@@ -336,16 +379,36 @@ public class HtmlParser
                     node = node.Next;
                 }
             }
-            if (depth == userPath.Length - 1 && currentNode.Tag == userPath[depth])
+            if (depth == userPath.Length - 1 &&
+               (currentNode.Tag == userPath[depth] || userPath[depth] == "*"))
                 subTrees.Add(currentNode);
 
-            if (currentNode.Depth != unvisited.Peek()?.Depth)
+            if (currentNode.Depth != unvisited.Peek()?.Depth && depth < userPath.Length)
                 depth++;
-
         }
-
         return subTrees;
     }
+
+    //private string PrintNode(MyLinkedList<GTree<string>>.Node node)
+    //{
+    //    var stack = new MyStack<MyLinkedList<GTree<string>>.Node>();
+    //    string result = "";
+    //    stack.Push(node);
+    //    while (!stack.IsEmpty())
+    //    {
+    //        var currentNode = stack.Pop();
+    //        var childNode = currentNode.Value._childNodes.First();
+    //        if (childNode != null)
+    //        {
+    //            result += $"{currentNode.Value.Tag}";
+    //            stack.Push(childNode);
+    //        }
+    //        if (childNode == null)
+    //        {
+
+    //        }
+    //    }
+    //}
     private void SetNode(GTree<string> node)
     {
         throw new NotImplementedException();
