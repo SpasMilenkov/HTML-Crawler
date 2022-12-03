@@ -26,7 +26,15 @@ public class GTree<T>
             return;
         }
 
-        _childNodes.AddLast (child);
-
+        _childNodes.AddLast(child);
+    }
+    public bool HasProp(string parameter)
+    {
+        for (int i = 0; i < Props.Count; i++)
+        {
+            if (Props[i] == parameter)
+                return true;
+        }
+        return false;
     }
 }
