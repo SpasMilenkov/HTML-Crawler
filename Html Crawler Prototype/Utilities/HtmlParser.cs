@@ -1,3 +1,4 @@
+using System;
 using System.Security.Authentication.ExtendedProtection;
 using HTML_Crawler_Prototype;
 
@@ -331,9 +332,10 @@ public class HtmlParser
         MyQueue<GTree<string>> unvisited = new MyQueue<GTree<string>>();
         int depth = 0;
         unvisited.Enqueue(subtree);
+        bool first = true;
         while (!unvisited.IsEmpty())
         {
-            var currentNode = unvisited.Dequeue();
+            GTree<string> currentNode = unvisited.Dequeue();
             string[] complexInput = Helper.Split(userPath[depth], '[');
             if(complexInput.Length > 1)
             {
@@ -341,11 +343,13 @@ public class HtmlParser
                 string param = Helper.Slice(complexInput[1], 0, complexInput[1].Length - 1);
                 int elementPosition = 0;
                 if(int.TryParse(param, out elementPosition))
-                {
+                {;
                     int index = 1;
                     while (!unvisited.IsEmpty())
                     {
-                        if (tag == currentNode.Tag && index == elementPosition)
+                        if(!first)
+                            currentNode = unvisited.Dequeue();
+                        if (tag == currentNode.Tag && index == elementPosition )
                         {
                             if(depth == userPath.Length - 1)
                             {
@@ -363,12 +367,43 @@ public class HtmlParser
                         }
                         else if(tag == currentNode.Tag && index != elementPosition)
                             index++;
+                        first = false;
+                    }
+                }
+                else
+                {
+                    param = Helper.Slice(param, 1, param.Length);
 
+                    while (!unvisited.IsEmpty())
+                    {
+                        if(tag != currentNode.Tag || !currentNode.HasProp(param))
+                        {
+                            currentNode = unvisited.Dequeue();
+                            if (currentNode.Depth != unvisited.Peek()?.Depth && depth < userPath.Length)
+                                break;
+
+                            continue;
+                        }
+                        if(depth == userPath.Length - 1)
+                        {
+                            subTrees.Add(currentNode);
+                            return subTrees;
+                        }
+                        var childNode = currentNode._childNodes.First();
+                        while (childNode != null)
+                        {
+                            unvisited.Enqueue(childNode.Value);
+                            childNode = childNode.Next;
+                        }
                         currentNode = unvisited.Dequeue();
+                        if (currentNode.Depth != unvisited.Peek()?.Depth && depth < userPath.Length)
+                        {
+                            depth++;
+                            break;
+                        }
                     }
                 }
             }
-
             if (depth < userPath.Length - 1 &&
                 (currentNode.Tag == userPath[depth] || userPath[depth] == "*"))
             {
