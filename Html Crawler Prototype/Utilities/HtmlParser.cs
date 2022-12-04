@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel;
+using System.Net.NetworkInformation;
 using System.Security.Authentication.ExtendedProtection;
 using HTML_Crawler_Prototype;
 
@@ -303,27 +305,36 @@ public class HtmlParser
             queue += split[i];
 
         queue = Helper.Slice(queue, 2, queue.Length - 1);
+
         string[] path = Helper.Split(queue, '/');
 
         if (path[0] == "")
             path = Helper.Slice(path, 1);
 
-        SearchNode(path, subTree);
 
         switch (split[0])
         {
-            //case "PRINT":
-            //    PrintNode(SearchNode(splitQueue));
-            //    break;
-            //case "SET":
-            //    SetNode(SearchNode(splitQueue));
-            //    break;
-            //case "COPY":
-            //    CopyNode(SearchNode(splitQueue));
-            //    break;
-            case "//":
-                //PrintNode(HtmlTree);
+            case "PRINT":
+                if (path.Length == 1)
+                {
+                   Console.WriteLine( PrintNode(HtmlTree, "", false));
+                }
+                else
+                {
+                    var nodes = SearchNode(path, subTree);
+                    for (int i = 0; i < nodes.Count; i++)
+                    {
+                        Console.WriteLine(PrintNode(nodes[i], "", false));
+                    }
+                }
                 break;
+
+                //case "SET":
+                //    SetNode(SearchNode(path, subTree));
+                //    break;
+                //case "COPY":
+                //    CopyNode(SearchNode(path, subTree));
+                //    break;
         }
     }
 
@@ -333,33 +344,42 @@ public class HtmlParser
     {
         //contains the results with the nodes that met the crteria
         List<GTree<string>> subTrees = new List<GTree<string>>();
+
         //contains the nodes that are yet to be visited 
         MyQueue<GTree<string>> unvisited = new MyQueue<GTree<string>>();
+
         //tracks the depth of the path in order for the checks to work
         int depth = 0;
+
         unvisited.Enqueue(subtree);
         //bool flag that checks if its the first time the specific index algorithm querry is run
         bool first = true;
+
         //main engine of the algorithm
         while (!unvisited.IsEmpty())
         {
             //gets the first node in the queue
             GTree<string> currentNode = unvisited.Dequeue();
             //checks if targument in the path is complex aka p[2] or table[@id='table2']
+
             string[] complexInput = Helper.Split(userPath[depth], '[');
             if(complexInput.Length > 1)
             {
                 //get the tag of the node
                 string tag = complexInput[0];
+
                 //get the second parameter of the complex algorithm
                 string param = Helper.Slice(complexInput[1], 0, complexInput[1].Length - 1);
+
                 //the int that contains the position of the parameter if we are searching by position in the document
                 int elementPosition = 0;
+
                 if(int.TryParse(param, out elementPosition))
                 {;
                     //the starting index of the elements gets incremented every time the algorithm finds a matching tag
                     //until it aligns with the elementPosition desired by the user
                     int index = 1;
+
                     while (!unvisited.IsEmpty())
                     {
                         //prevents queue overflow
@@ -401,6 +421,7 @@ public class HtmlParser
                         if(tag != currentNode.Tag || !currentNode.HasProp(param))
                         {
                             currentNode = unvisited.Dequeue();
+
                             //if the next element is one level deeper we
                             //reached the next level of the tree so we break of this algorithm
                             if (currentNode.Depth != unvisited.Peek()?.Depth && depth < userPath.Length)
@@ -459,26 +480,40 @@ public class HtmlParser
         return subTrees;
     }
 
-    //private string PrintNode(MyLinkedList<GTree<string>>.Node node)
-    //{
-    //    var stack = new MyStack<MyLinkedList<GTree<string>>.Node>();
-    //    string result = "";
-    //    stack.Push(node);
-    //    while (!stack.IsEmpty())
-    //    {
-    //        var currentNode = stack.Pop();
-    //        var childNode = currentNode.Value._childNodes.First();
-    //        if (childNode != null)
-    //        {
-    //            result += $"{currentNode.Value.Tag}";
-    //            stack.Push(childNode);
-    //        }
-    //        if (childNode == null)
-    //        {
+    private string PrintNode(GTree<string> node, string result, bool visited)
+    {
+        var firstChild = node._childNodes.First();
+        if (firstChild != null)
+        {
+            if (!visited)
+            {
+                result += $"<{node.Tag}>\n";
+            }
 
-    //        }
-    //    }
-    //}
+            while(firstChild != null)
+            {
+                if(firstChild.Value._childNodes.First != null)
+                {
+                    result = PrintNode(firstChild.Value, result, false);
+                }    
+                else
+                {
+                    result += $"<{firstChild.Value.Tag}> {firstChild.Value.Value} </{firstChild.Value.Tag}>\n";
+                }
+                if(firstChild.Next == null)
+                {
+                    result += $"</{node.Tag}>\n";
+                }
+                firstChild = firstChild.Next; 
+            }
+
+        }
+        else
+        {
+            result += $"<{node.Tag}> {node.Value} </{node.Tag}>\n";
+        }
+        return result;
+    }
     private void SetNode(GTree<string> node)
     {
         throw new NotImplementedException();
