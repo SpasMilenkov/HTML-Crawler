@@ -5,7 +5,7 @@ public class UiHandler
 {
     //HARDCODED REMOVE LATER
     private static string _Path = "/home/spasmilenkov/Documents/SAA-uni/html-test.txt";
-    private static string _winPath = @"C:\Users\Spas Milenkov\Downloads\html-test.txt";
+    private const string _winPath = @"C:\Users\Spas Milenkov\Downloads\html-test.txt";
 
     //HTML Parsing instance
     private static HtmlParser _parser = new HtmlParser();
@@ -57,7 +57,7 @@ public class UiHandler
             using (StreamReader sr = new StreamReader(_winPath))
             {
                 string line;
-            
+
                 while ((line = sr.ReadLine()) != null)
                 {
                     // _parser.Html = _parser.Html += line;
@@ -74,6 +74,7 @@ public class UiHandler
         }
         _parser.Html = File.ReadAllText(_winPath);
         _parser.ParseHtml();
+        Console.WriteLine("Done");
     }
 
     public void PrintNode()

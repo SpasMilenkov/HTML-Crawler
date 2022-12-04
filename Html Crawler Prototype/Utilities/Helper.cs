@@ -5,6 +5,12 @@ public static class Helper
 {
     public static string[] Split(string text, char separator)
     {
+        if(text.Length == 1)
+        {
+            string[] split = new string[] {text};
+
+            return split;
+        }
         //hold the number of times the separator is met in the text
         int sepCount = 0;
 
