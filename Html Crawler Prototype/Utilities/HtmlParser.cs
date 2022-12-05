@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Security.Authentication.ExtendedProtection;
 using HTML_Crawler_Prototype;
@@ -337,7 +339,88 @@ public class HtmlParser
                 //    break;
         }
     }
+    private void PropSearch(
+        ref MyQueue<GTree<string>> unvisited,
+        ref List<GTree<string>> subTrees,
+        ref int depth,
+        string tag,
+        string param,
+        int pathLength) 
+    {
+        while (!unvisited.IsEmpty())
+        {
+            var currentNode = unvisited.Dequeue();
+            //if the tag or prop are not matching just go the next tag
+            if (tag != currentNode.Tag || !currentNode.HasProp(param))
+            {
 
+                //if the next element is one level deeper we
+                //reached the next level of the tree so we break of this algorithm
+                if (currentNode.Depth != unvisited.Peek()?.Depth && depth < pathLength && !unvisited.IsEmpty())
+                    break;
+
+                continue;
+            }
+            //if we are at the last element of the user path we insert the element in the list and return
+            if (depth == pathLength - 1)
+            {
+                subTrees.Add(currentNode);
+                return;
+            }
+            //else we just add the children and continue
+            var childNode = currentNode._childNodes.First();
+            while (childNode != null)
+            {
+                unvisited.Enqueue(childNode.Value);
+                childNode = childNode.Next;
+            }
+            //same as the check above
+            if (currentNode.Depth != unvisited.Peek()?.Depth && depth < pathLength)
+            {
+                break;
+            }
+        }
+    }
+    private void PositionSearch(
+        ref MyQueue<GTree<string>> unvisited,
+        ref List<GTree<string>> subTrees,
+        ref int depth,
+        string tag,
+        int elementPosition,
+        int pathLength)
+    {
+        //the starting index of the elements gets incremented every time the algorithm finds a matching tag
+        //until it aligns with the elementPosition desired by the user
+        int index = 1;
+
+        while (!unvisited.IsEmpty())
+        {
+            var currentNode = unvisited.Dequeue();
+
+            if (tag == currentNode.Tag && index == elementPosition)
+            {
+                //if it is the end of the path add the element directly to the list and return
+                if (depth == pathLength - 1)
+                {
+                    subTrees.Add(currentNode);
+                    return;
+                }
+                //if it is not the end of the path add the children of the current element and increase the depth and index;
+                var childNode = currentNode._childNodes.First();
+                while (childNode != null)
+                {
+                    unvisited.Enqueue(childNode.Value);
+                    childNode = childNode.Next;
+                }
+                index++;
+                depth++;
+                return;
+            }
+            //if the tag is matching but we are not on the desired position just increment the index
+            else if (tag == currentNode.Tag && index != elementPosition)
+                index++;
+        }
+    }
     //traverses a subnode (that can be the entire tree if needed) and returns all nodes that 
     //meet the given user path criteria
     private List<GTree<string>> SearchNode(string[] userPath, GTree<string> subtree)
@@ -352,18 +435,15 @@ public class HtmlParser
         int depth = 0;
 
         unvisited.Enqueue(subtree);
-        //bool flag that checks if its the first time the specific index algorithm querry is run
-        bool first = true;
-
         //main engine of the algorithm
         while (!unvisited.IsEmpty())
         {
-            //gets the first node in the queue
-            GTree<string> currentNode = unvisited.Dequeue();
-            //checks if targument in the path is complex aka p[2] or table[@id='table2']
 
+            //checks if targument in the path is complex aka p[2] or table[@id='table2']
+            if (depth >= userPath.Length)
+                break;
             string[] complexInput = Helper.Split(userPath[depth], '[');
-            if(complexInput.Length > 1)
+            if (complexInput.Length > 1)
             {
                 //get the tag of the node
                 string tag = complexInput[0];
@@ -374,86 +454,23 @@ public class HtmlParser
                 //the int that contains the position of the parameter if we are searching by position in the document
                 int elementPosition = 0;
 
-                if(int.TryParse(param, out elementPosition))
-                {;
-                    //the starting index of the elements gets incremented every time the algorithm finds a matching tag
-                    //until it aligns with the elementPosition desired by the user
-                    int index = 1;
-
-                    while (!unvisited.IsEmpty())
-                    {
-                        //prevents queue overflow
-                        if(!first)
-                            currentNode = unvisited.Dequeue();
-                        if (tag == currentNode.Tag && index == elementPosition )
-                        {
-                            //if it is the end of the path add the element directly to the list and return
-                            if(depth == userPath.Length - 1)
-                            {
-                                subTrees.Add(currentNode);
-                                return subTrees;
-                            }
-                            //if it is not the end of the path add the children of the current element and increase the depth and index;
-                            var childNode = currentNode._childNodes.First();
-                            while(childNode != null)
-                            {
-                                unvisited.Enqueue(childNode.Value);
-                                childNode = childNode.Next;
-                            }
-                            index++;
-                            depth++;
-                        }
-                        //if the tag is matching but we are not on the desired position just increment the index
-                        else if(tag == currentNode.Tag && index != elementPosition)
-                            index++;
-                        //after the first iteration we raise the flag so we can start dequeing 
-                        first = false;
-                    }
+                if (int.TryParse(param, out elementPosition))
+                {
+                    PositionSearch(ref unvisited, ref subTrees, ref depth, tag, elementPosition, userPath.Length);
+                    continue;
                 }
                 else //the algorithm that iterates if we are searching by attribute
                 {
                     //get the parameter in a form that can be compared with el properties
                     param = Helper.Slice(param, 1, param.Length);
-
-                    while (!unvisited.IsEmpty())
-                    {
-                        //if the tag or prop are not matching just go the next tag
-                        if(tag != currentNode.Tag || !currentNode.HasProp(param))
-                        {
-                            currentNode = unvisited.Dequeue();
-
-                            //if the next element is one level deeper we
-                            //reached the next level of the tree so we break of this algorithm
-                            if (currentNode.Depth != unvisited.Peek()?.Depth && depth < userPath.Length)
-                                break;
-
-                            continue;
-                        }
-                        //if we are at the last element of the user path we insert the element in the list and return
-                        if(depth == userPath.Length - 1)
-                        {
-                            subTrees.Add(currentNode);
-                            return subTrees;
-                        }
-                        //else we just add the children and continue
-                        var childNode = currentNode._childNodes.First();
-                        while (childNode != null)
-                        {
-                            unvisited.Enqueue(childNode.Value);
-                            childNode = childNode.Next;
-                        }
-                        currentNode = unvisited.Dequeue();
-                        //same as the check above
-                        if (currentNode.Depth != unvisited.Peek()?.Depth && depth < userPath.Length)
-                        {
-                            depth++;
-                            break;
-                        }
-                    }
+                    PropSearch(ref unvisited, ref subTrees, ref depth, tag, param, userPath.Length);
+                    depth++;
+                    continue;
                 }
             }
             //the main algorithm that runs if we just seach by tags
-
+            //gets the first node in the queue
+            GTree<string> currentNode = unvisited.Dequeue();
             //if the element s tag is matching and its not the last part of the user path we just add the children and continue
             if (depth < userPath.Length - 1 &&
                 (currentNode.Tag == userPath[depth] || userPath[depth] == "*"))
@@ -475,6 +492,7 @@ public class HtmlParser
             //and go one level down
             if (currentNode.Depth != unvisited.Peek()?.Depth && depth < userPath.Length)
                 depth++;
+
         }
         //return the lists with the nodes that meet the user criteria
         return subTrees;
