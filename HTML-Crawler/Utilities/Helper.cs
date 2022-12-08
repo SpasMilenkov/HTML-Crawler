@@ -5,6 +5,12 @@ public static class Helper
 {
     public static string[] Split(string text, char separator)
     {
+        if (text.Length == 1)
+        {
+            string[] split = new string[] { text };
+
+            return split;
+        }
         //hold the number of times the separator is met in the text
         int sepCount = 0;
 
@@ -12,12 +18,12 @@ public static class Helper
         foreach (char c in text)
             if (c == separator)
                 sepCount++;
-        
+
         //initialize the array with the sep count + 1
         //even if the separator is not present in the string we return the entire string in the array
         //length is 0+1
         string[] splitString = new string[sepCount + 1];
-        
+
         //returns the entire string alone in an array
         //covers the case where the separator is not present
         if (sepCount == 0)
@@ -32,20 +38,21 @@ public static class Helper
         string currentSplit = "";
         for (int j = 0; j < text.Length; j++)
         {
-            if (text[j] == separator )
+            if (text[j] == separator)
             {
                 splitString[i] = currentSplit;
                 currentSplit = "";
                 i++;
                 j++;
             }
-            
-            if (j == text.Length-1)
+
+            if (j == text.Length - 1)
             {
                 currentSplit += text[j];
                 splitString[i] = currentSplit;
                 return splitString;
             }
+
             currentSplit += text[j];
         }
         return splitString;
