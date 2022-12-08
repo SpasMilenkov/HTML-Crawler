@@ -1,9 +1,10 @@
+using HTML_Crawler.Routers;
 using HTML_Crawler.UI;
-
 namespace HTML_Crawler
 {
     public partial class FormMain : Form
     {
+        Router _router = new Router();
         public FormMain()
         {
             InitializeComponent();
@@ -20,7 +21,7 @@ namespace HTML_Crawler
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            LoadDocument loadForm = new LoadDocument();
+            LoadDocument loadForm = new LoadDocument(_router);
             loadForm.ShowDialog();
         }
     }
