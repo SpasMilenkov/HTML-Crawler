@@ -9,6 +9,14 @@
       "HTML-Crawler/1.0.0": {
         "runtime": {
           "HTML-Crawler.dll": {}
+        },
+        "resources": {
+          "dje-NE/HTML-Crawler.resources.dll": {
+            "locale": "dje-NE"
+          },
+          "dje/HTML-Crawler.resources.dll": {
+            "locale": "dje"
+          }
         }
       }
     }

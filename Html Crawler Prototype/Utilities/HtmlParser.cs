@@ -8,6 +8,7 @@ namespace Html_Crawler_Prototype.Utilities;
 
 public class HtmlParser
 {
+    #region Global Variables
     //the reason for my existence
     public GTree<string> HtmlTree = new GTree<string>();
     public string Html = "";
@@ -20,7 +21,8 @@ public class HtmlParser
     //a hashmap containing all valid html tags
     private static Dictionary _validTags = new Dictionary(130);
     private int _depth = 1;
-    
+    #endregion
+
     public void ParseHtml()
     {
         LoadTagsDB();
@@ -292,7 +294,7 @@ public class HtmlParser
     }
     
     //Parse the user query
-    public void ParseInput(string input)
+    public void PrintInput(string input)
     {
 
         string[] split =  Helper.Split(input, ' ');
@@ -312,32 +314,28 @@ public class HtmlParser
             path = Helper.Slice(path, 1);
 
 
-        switch (split[0])
+        if (path.Length == 1)
         {
-            case "PRINT":
-                if (path.Length == 1)
-                {
-                   Console.WriteLine( PrintNode(HtmlTree, "", false));
-                }
-                else
-                {
-                    var nodes = SearchNode(path, subTree);
-                    for (int i = 0; i < nodes.Count; i++)
-                    {
-                        Console.WriteLine(PrintNode(nodes[i], "", false));
-                    }
-                }
-                break;
-
-                //case "SET":
-                //    SetNode(SearchNode(path, subTree));
-                //    break;
-                //case "COPY":
-                //    CopyNode(SearchNode(path, subTree));
-                //    break;
+            Console.WriteLine(PrintNode(HtmlTree, "", false));
         }
-    }
+        else
+        {
+            var nodes = SearchNode(path, subTree);
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                Console.WriteLine(PrintNode(nodes[i], "", false));
+            }
+        }
 
+    }
+    public void SetInput(string input)
+    {
+
+    }
+    public void CopyInput(string input)
+    {
+
+    }
     //traverses a subnode (that can be the entire tree if needed) and returns all nodes that 
     //meet the given user path criteria
     private List<GTree<string>> SearchNode(string[] userPath, GTree<string> subtree)
@@ -514,9 +512,12 @@ public class HtmlParser
         }
         return result;
     }
-    private void SetNode(GTree<string> node)
+    private void SetNode(List<GTree<string>> nodes, string value)
     {
-        throw new NotImplementedException();
+        for (int i = 0; i < nodes.Count; i++)
+        {
+
+        }
     }
     private void CopyNode(GTree<string> node)
     {
