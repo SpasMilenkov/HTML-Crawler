@@ -9,20 +9,23 @@ namespace HTML_Crawler
         {
             InitializeComponent();
             this.BackColor = Color.FromArgb(38, 38, 46);
-            this.textBox1.BackColor = Color.FromArgb(61, 61, 77);
-            this.textBox2.BackColor = Color.FromArgb(61, 61, 77);
+            this.textBoxOutput.BackColor = Color.FromArgb(61, 61, 77);
+            this.textBoxInput.BackColor = Color.FromArgb(61, 61, 77);
             WindowState = FormWindowState.Maximized;
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void FormMain_Load(object sender, EventArgs e)
         {
             LoadDocument loadForm = new LoadDocument(_router);
             loadForm.ShowDialog();
+        }
+
+        private void textBox2_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter)
+                return;
+
+           textBoxOutput.Text =  _router.ParseInput(textBoxInput.Text);
         }
     }
 }
