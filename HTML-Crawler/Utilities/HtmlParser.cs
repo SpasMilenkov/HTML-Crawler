@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Net.NetworkInformation;
 using System.Security.Authentication.ExtendedProtection;
 using HTML_Crawler_Prototype;
+using Microsoft.VisualBasic.ApplicationServices;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Html_Crawler_Prototype.Utilities;
 
@@ -295,7 +297,7 @@ public class HtmlParser
     }
 
     //Parse the user query
-    public void PrintInput(string input)
+    public string PrintInput(string input)
     {
 
         string[] split = Helper.Split(input, ' ');
@@ -314,20 +316,21 @@ public class HtmlParser
         if (path[0] == "")
             path = Helper.Slice(path, 1);
 
+        string result = "";
 
         if (path.Length == 1)
         {
-            Console.WriteLine(PrintNode(HtmlTree, "", false));
+           return PrintNode(HtmlTree, "");
         }
         else
         {
             var nodes = SearchNode(path, subTree);
             for (int i = 0; i < nodes.Count; i++)
             {
-                Console.WriteLine(PrintNode(nodes[i], "", false));
+               result += $"{PrintNode(nodes[i], "")}\n";
             }
         }
-
+        return result;
     }
     public void SetInput(string input)
     {
@@ -496,29 +499,37 @@ public class HtmlParser
         return subTrees;
     }
 
-    private string PrintNode(GTree<string> node, string result, bool visited)
+    private string PrintNode(GTree<string> node, string result)
     {
         var firstChild = node._childNodes.First();
         if (firstChild != null)
         {
-            if (!visited)
-            {
-                result += $"<{node.Tag}>\n";
-            }
+
+            result += $"<{node.Tag}>" + System.Environment.NewLine;
+            
 
             while (firstChild != null)
             {
                 if (firstChild.Value._childNodes.First != null)
                 {
-                    result = PrintNode(firstChild.Value, result, false);
+                    for (int i = 0; i < node.Depth; i++)
+                    {
+                        result += "   ";
+                    }
+                    result = PrintNode(firstChild.Value, result);
+
                 }
                 else
                 {
-                    result += $"<{firstChild.Value.Tag}> {firstChild.Value.Value} </{firstChild.Value.Tag}>\n";
+                    result += $"<{firstChild.Value.Tag}> {firstChild.Value.Value} </{firstChild.Value.Tag}>" + System.Environment.NewLine;
                 }
                 if (firstChild.Next == null)
                 {
-                    result += $"</{node.Tag}>\n";
+                    for (int i = 1; i < node.Depth; i++)
+                    {
+                        result += "   ";
+                    }
+                    result += $"</{node.Tag}>" + System.Environment.NewLine;
                 }
                 firstChild = firstChild.Next;
             }
@@ -526,19 +537,9 @@ public class HtmlParser
         }
         else
         {
-            result += $"<{node.Tag}> {node.Value} </{node.Tag}>\n";
+            result += $"<{node.Tag}> {node.Value} </{node.Tag}>" + System.Environment.NewLine;
         }
-        return result;
-    }
-    private void SetNode(List<GTree<string>> nodes, string value)
-    {
-        for (int i = 0; i < nodes.Count; i++)
-        {
 
-        }
-    }
-    private void CopyNode(GTree<string> node)
-    {
-        throw new NotImplementedException();
+        return result;
     }
 }
