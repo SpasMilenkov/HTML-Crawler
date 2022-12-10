@@ -118,4 +118,16 @@ public static class Helper
         return sliced;
 
     }
+    public static string[] Slice(string[] arr, int beginning, int ending)
+    {
+        string[] sliced = new string[ending - beginning];
+        int k = 0;
+        for (int i = beginning; i < ending; i++, k++)
+        {
+            sliced[k] = arr[i];
+        }
+
+        return sliced;
+
+    }
 }
