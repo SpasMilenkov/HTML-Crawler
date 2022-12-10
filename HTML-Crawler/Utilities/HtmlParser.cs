@@ -157,7 +157,8 @@ public class HtmlParser
         }
         catch (Exception e)
         {
-            Console.WriteLine("Parsing Error please. Please check your input again!");
+            MessageBox.Show("Parsing Error please. Please check your input again!");
+            throw new Exception();
         }
     }
     public void GetOpeningTag(GTree<string>? currentNode)
@@ -299,42 +300,218 @@ public class HtmlParser
     //Parse the user query
     public string PrintInput(string input)
     {
-
-        string[] split = Helper.Split(input, ' ');
-        string operation = split[0];
-        string queue = "";
+        
         GTree<string> subTree = HtmlTree;
-        var results = new List<GTree<string>>();
+        input = Helper.Slice(input, 2, input.Length - 1);
+        string[] path = Helper.Split(input, '/');
 
-        for (int i = 1; i < split.Length; i++)
-            queue += split[i];
-
-        queue = Helper.Slice(queue, 2, queue.Length - 1);
-
-        string[] path = Helper.Split(queue, '/');
-
-        if (path[0] == "")
-            path = Helper.Slice(path, 1);
+        path = Helper.Slice(path, 1);
 
         string result = "";
 
-        if (path.Length == 1)
+        if (path.Length <= 1)
         {
-           return PrintNode(HtmlTree, "");
+            return PrintNode(HtmlTree, "");
         }
         else
         {
             var nodes = SearchNode(path, subTree);
-            for (int i = 0; i < nodes.Count; i++)
+            var node = nodes.First();
+
+            while (node != null)
             {
-               result += $"{PrintNode(nodes[i], "")}\n";
+                if (node.Value._childNodes.First() == null)
+                {
+                    result += PrintNode(node.Value, "");
+                }
+                node = node.Next;
             }
         }
         return result;
     }
-    public void SetInput(string input)
+    public void SetInput(string path, string input)
     {
+        string[] pathSplitted = Helper.Split(Helper.Slice(path, 3, path.Length - 1), '/');
+        MyLinkedList<GTree<string>> nodes = SearchNode(pathSplitted, HtmlTree);
 
+        var node = nodes.First();
+
+        while (node != null)
+        {
+            if (node.Value._childNodes.First() == null)
+            {
+                node.Value.Value = input;
+            }
+            node = node.Next;
+        }
+    }
+    public MyLinkedList<GTree<string>> ParseSubTree(string input, int depth)
+    {
+        MyStack<GTree<string>> parents = new MyStack<GTree<string>>();
+        int parentDepth = depth;
+        MyLinkedList<GTree<string>> nodes = new MyLinkedList<GTree<string>>();
+        GTree<string> currentNode = new GTree<string>();
+
+        for (int i = 0; i < input.Length;)
+        {
+            string nodeValue = "";
+            string value = "";
+            if (input[i] == '<' && input[i + 1] == '/')
+            {
+                currentNode = parents.Pop();
+                ClosingTagValidator(ref depth, input, ref i,ref currentNode, value);
+                continue;
+            }
+            else if(input[i] == '<')
+            {
+                i++;
+                while (input[i] != '>')
+                {
+                    nodeValue += input[i];
+                    i++;
+                }
+                string[] nodeEls = Helper.Split(nodeValue, ' ');
+                currentNode.Tag = nodeEls[0];
+                string hashed = _validTags.FindKey(currentNode.Tag);
+
+                if (nodeEls.Length > 1)
+                    for (int j = 1; j < nodeEls.Length; j++)
+                        currentNode.Props.Add(nodeEls[j]);
+                depth++;
+                currentNode.Depth = depth;
+                if (input[i - 1] == '/')
+                {
+                    if (hashed != "selfClosing")
+                    {
+                        throw new Exception();
+                    }
+                    depth--;
+                    _openedTags++;
+                    _closedTags++;
+                    currentNode.Depth = depth;
+                    currentNode = currentNode.Parent;
+                    currentNode.SelfClosing = true;
+
+                    if (nodes.First().Value.Depth == currentNode.Depth)
+                    {
+                        nodes.AddLast(currentNode);
+                    }
+
+                    continue;
+                }
+                parents.Push(currentNode);
+                _openedTags++;
+            }
+
+            i++;
+            bool emptyString = true;
+            //explodes
+            if (currentNode.Tag == null)
+                continue;
+            if(i <= input.Length - 1)
+            {
+                while (i <= input.Length - 1 && input[i] != '<')
+                {
+                    if (input[i] != ' ' && input[i] != '\t' && input[i] != '\n')
+                        emptyString = false;
+                    value += input[i];
+                    i++;
+                }
+
+                if (!emptyString)
+                {
+                    GTree<string> childText = new GTree<string>();
+                    childText.Tag = "Text"; //introduce custom text node so that i can keep track of the text in a container
+                    childText.Value = value;
+                    childText.Parent = currentNode;
+                    childText.Depth = depth;
+                    currentNode?.AddChild(childText);
+                }
+
+                if (input[i + 1] == '/')
+                {
+                    currentNode = parents.Pop();
+                    ClosingTagValidator(ref depth, input, ref i, ref currentNode, value);
+                    continue;
+                }
+            }
+  
+            GTree<string> child = new GTree<string>();
+
+            if (_openedTags != _closedTags)
+            {
+                currentNode.AddChild(child);
+                currentNode.Value = value;
+                currentNode = child;
+                continue;
+            }
+            if (nodes.First() == null)
+            {
+                GTree<string> gTree = new GTree<string>(currentNode);
+                nodes.AddFirst(gTree);
+            }
+            else
+            {
+                GTree<string> gTree = new GTree<string>(currentNode);
+                nodes.AddLast(gTree);
+            }
+        }
+        return nodes;
+    }
+    private void ClosingTagValidator(
+        ref int depth,
+        string input,
+        ref int p,
+        ref GTree<string> currentNode,
+        string value)
+    {
+        string closingTag = "";
+        p += 2;
+        while (input[p] != '>')
+        {
+            closingTag += input[p];
+            p++;
+        }
+        string hashed = _validTags.FindKey(closingTag);
+
+        if (hashed == null || closingTag != currentNode.Tag)
+        {
+            Console.WriteLine($"{currentNode.Tag}invalid closing tag");
+            throw new Exception("pain");
+        }
+        _closedTags++;
+        currentNode.Value = value;
+        depth--;
+        currentNode.Depth = depth;
+        //problem
+    }
+    public void SetSubtree(string path, string input)
+    {
+        string[] pathSplitted = Helper.Split(Helper.Slice(path, 3, path.Length - 1), '/');
+        MyLinkedList<GTree<string>> parentNodes = SearchNode(pathSplitted, HtmlTree);
+        var parent = parentNodes.First();
+        MyLinkedList<GTree<string>> nodes = ParseSubTree(Helper.Slice(input, 1, input.Length-1), parent.Value.Depth);
+        var node = nodes.First();
+
+        while (parent != null)
+        {
+            var firstChild = parent.Value._childNodes.First();
+            while(firstChild != null)
+            {
+                parent.Value._childNodes.Remove(firstChild);
+                firstChild = firstChild.Next;
+            }
+            while(node != null)
+            {
+                if (parent.Value._childNodes.First() == null)
+                    parent.Value._childNodes.AddFirst(node.Value);
+                else
+                    parent.Value._childNodes.AddLast(node.Value);
+
+                node = node.Next;
+            }
+            parent = parent.Next;
+        }
     }
     public void CopyInput(string input)
     {
@@ -342,7 +519,7 @@ public class HtmlParser
     }
     private void PropSearch(
        ref MyQueue<GTree<string>> unvisited,
-       ref List<GTree<string>> subTrees,
+       ref MyLinkedList<GTree<string>> subTrees,
        ref int depth,
        string tag,
        string param,
@@ -365,7 +542,13 @@ public class HtmlParser
             //if we are at the last element of the user path we insert the element in the list and return
             if (depth == pathLength - 1)
             {
-                subTrees.Add(currentNode);
+                if (subTrees.First() == null)
+                {
+                    subTrees.AddFirst(currentNode);
+                    return;
+                }
+
+                subTrees.AddLast(currentNode);
                 return;
             }
             //else we just add the children and continue
@@ -384,7 +567,7 @@ public class HtmlParser
     }
     private void PositionSearch(
         ref MyQueue<GTree<string>> unvisited,
-        ref List<GTree<string>> subTrees,
+        ref MyLinkedList<GTree<string>> subTrees,
         ref int depth,
         string tag,
         int elementPosition,
@@ -403,7 +586,13 @@ public class HtmlParser
                 //if it is the end of the path add the element directly to the list and return
                 if (depth == pathLength - 1)
                 {
-                    subTrees.Add(currentNode);
+                    if (subTrees.First() == null)
+                    {
+                        subTrees.AddFirst(currentNode);
+                        return;
+                    }
+
+                    subTrees.AddLast(currentNode);
                     return;
                 }
                 //if it is not the end of the path add the children of the current element and increase the depth and index;
@@ -424,10 +613,10 @@ public class HtmlParser
     }
     //traverses a subnode (that can be the entire tree if needed) and returns all nodes that 
     //meet the given user path criteria
-    private List<GTree<string>> SearchNode(string[] userPath, GTree<string> subtree)
+    private MyLinkedList<GTree<string>> SearchNode(string[] userPath, GTree<string> subtree)
     {
         //contains the results with the nodes that met the crteria
-        List<GTree<string>> subTrees = new List<GTree<string>>();
+        MyLinkedList<GTree<string>> subTrees = new MyLinkedList<GTree<string>>();
 
         //contains the nodes that are yet to be visited 
         MyQueue<GTree<string>> unvisited = new MyQueue<GTree<string>>();
@@ -487,7 +676,14 @@ public class HtmlParser
             //there could be multiple results so we dont return
             if (depth == userPath.Length - 1 &&
                (currentNode.Tag == userPath[depth] || userPath[depth] == "*"))
-                subTrees.Add(currentNode);
+            {
+                if (subTrees.First() == null)
+                    subTrees.AddFirst(currentNode);
+                
+                else
+                    subTrees.AddLast(currentNode);
+                
+            }
 
             //if the next element in the queue is with a different depth we reached the end of that tree level
             //and go one level down
