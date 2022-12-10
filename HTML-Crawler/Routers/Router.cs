@@ -17,24 +17,36 @@ namespace HTML_Crawler.Routers
         {
             _parser = new HtmlParser();
         }
-        public void ParseInput(string input)
+        public string ParseInput(string input)
         {
             string command = IdentifyWord(input);
 
-            input = Helper.Slice(input, command.Length);
+            input = Helper.Slice(input, command.Length + 1);
             
 
             switch (command)
             {
                 case "PRINT":
-                    
-                    break;
+                    return _parser.PrintInput(input);
                 case "SET":
-                    break;
+
+                    string path = IdentifyWord(input);
+                    input = Helper.Slice(input, path.Length + 1);
+
+                    if (input[1] == '<')
+                    {
+                        _parser.SetSubtree(path, input);
+                        return _parser.PrintInput("\"//\"");
+                    }
+                    _parser.SetInput(path, input);
+                    return _parser.PrintInput("\"//\"");
                 case "Copy":
-                    break;
+                    _parser.CopyInput(input);
+                    return _parser.PrintInput("\"//\"");
                 case "//":
-                    break;
+                    return _parser.PrintInput(input);
+                default:
+                    return "Invalid input";
             }
         }
         private string IdentifyWord(string input)
