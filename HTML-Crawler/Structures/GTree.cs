@@ -44,20 +44,16 @@ public class GTree<T>
     //adds new child to the child nodes list
     public void AddChild(GTree<T> child)
     {
-        if (_childNodes.First() == null)
-        {
-            _childNodes.AddFirst(child);
-            return;
-        }
-
         _childNodes.AddLast(child);
     }
     public bool HasProp(string parameter)
     {
-        for (int i = 0; i < Props.Count; i++)
+        var node = Props.First();
+        while (node != null)
         {
             if (Props[i] == parameter)
                 return true;
+            node = node.Next;
         }
         return false;
     }
