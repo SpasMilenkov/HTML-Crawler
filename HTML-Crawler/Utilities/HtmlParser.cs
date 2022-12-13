@@ -735,4 +735,29 @@ public class HtmlParser
 
         return result;
     }
+
+    public GTree<string> DFSCopy(GTree<string> og, GTree<string> copy)
+    {
+        if (og._childNodes.First() != null)
+        {
+            var firstChild = new MyLinkedList<GTree<string>>.Node(og._childNodes.First());
+            while (firstChild != null)
+            {
+                if (firstChild.Value._childNodes.First != null)
+                {
+                    GTree<string> child = new GTree<string>(firstChild.Value);
+                    DFSCopy(firstChild.Value, child);
+                    copy._childNodes.AddFirst(child);
+                }
+                else
+                {
+                    GTree<string> newNode = new GTree<string>(firstChild.Value);
+                    copy._childNodes.AddFirst(newNode);
+                }
+                firstChild = firstChild.Next;
+            }
+
+        }
+        return copy;
+    }
 }
