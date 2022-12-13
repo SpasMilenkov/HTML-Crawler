@@ -2,16 +2,16 @@ namespace HTML_Crawler_Prototype;
 
 public class MyStack<T>
 {
-    private List<T> _container;
+    private MyLinkedList<T> _container;
 
     public MyStack()
     {
-        _container = new List<T>();
+        _container = new MyLinkedList<T>();
     }
 
     public void Push(T value)
     {
-        _container.Add(value);
+        _container.AddLast(value);
     }
 
     public T Pop()
@@ -19,10 +19,19 @@ public class MyStack<T>
         if (IsEmpty())
             throw new Exception("Stack underflow");
         
-        var lastEl = _container[_container.Count - 1];
-        _container.RemoveAt(_container.Count - 1);
+        var lastEl = _container.Last();
+        _container.Remove(lastEl);
 
-        return lastEl;
+        return lastEl.Value;
     } 
-    public bool IsEmpty() => _container.Count == 0;
+    public T Peek()
+    {
+        if (IsEmpty())
+            throw new Exception("Stack underflow");
+
+        var lastEl = _container.Last();
+
+        return lastEl.Value;
+    }
+    public bool IsEmpty() => _container.Count() == 0;
 }
