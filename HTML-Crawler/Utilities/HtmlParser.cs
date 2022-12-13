@@ -692,36 +692,34 @@ public class HtmlParser
         return subTrees;
     }
 
-    private string PrintNode(GTree<string> node, string result)
+    private string PrintNode(GTree<string> node, string result, int depth)
     {
         var firstChild = node._childNodes.First();
         if (firstChild != null)
         {
 
-            result += $"<{node.Tag}>" + System.Environment.NewLine;
-            
+            result += $"<{node.Tag} {node.PropsString()}>" + System.Environment.NewLine;
+            depth++;
 
             while (firstChild != null)
             {
                 if (firstChild.Value._childNodes.First != null)
                 {
-                    for (int i = 0; i < node.Depth; i++)
-                    {
+                    for (int i = 0; i < depth; i++)
                         result += "   ";
-                    }
-                    result = PrintNode(firstChild.Value, result);
 
+                    result = PrintNode(firstChild.Value, result, ++depth);
+                    depth--;
                 }
                 else
                 {
-                    result += $"<{firstChild.Value.Tag}> {firstChild.Value.Value} </{firstChild.Value.Tag}>" + System.Environment.NewLine;
+                    result += $"<{firstChild.Value.Tag}{firstChild.Value.PropsString()}> {firstChild.Value.Value} </{firstChild.Value.Tag}>" + System.Environment.NewLine;
                 }
                 if (firstChild.Next == null)
                 {
-                    for (int i = 1; i < node.Depth; i++)
-                    {
+                    for (int i = 1; i < depth - 1; i++)
                         result += "   ";
-                    }
+                    
                     result += $"</{node.Tag}>" + System.Environment.NewLine;
                 }
                 firstChild = firstChild.Next;
@@ -730,7 +728,10 @@ public class HtmlParser
         }
         else
         {
-            result += $"<{node.Tag}> {node.Value} </{node.Tag}>" + System.Environment.NewLine;
+            if (node.SelfClosing)
+                result += $"<{node.Tag}{node.PropsString()}/>" + System.Environment.NewLine;
+            else
+                result += $"<{node.Tag}{node.PropsString()}> {node.Value} </{node.Tag}>" + System.Environment.NewLine;
         }
 
         return result;
