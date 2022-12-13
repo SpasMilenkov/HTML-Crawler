@@ -47,6 +47,8 @@ public class HtmlParser
     }
     public void IterativeParse()
     {
+        MyStack<GTree<string>> parents = new MyStack<GTree<string>>();
+
         try
         {
             GTree<string> currentNode = new GTree<string>();
@@ -77,10 +79,8 @@ public class HtmlParser
 
                     if (nodeEls.Length > 1)
                         for (int j = 1; j < nodeEls.Length; j++)
-                            currentNode.Props.Add(nodeEls[j]);
-                    _depth++;
-
-                    if (Html[i - 1] == '/')
+                            currentNode.Props.AddLast(nodeEls[j]);
+                    if (Html[i - 1] == '/' && Html[i] == '>')
                     {
                         if (hashed != "selfClosing")
                         {
@@ -88,20 +88,27 @@ public class HtmlParser
                             errorFlag = true;
                             return;
                         }
-                        _depth--;
+                        var last = currentNode.Props.Last().Value;
+                        if (last[last.Length - 1] == '/')
+                        {
+                            last = Helper.Slice(last, 0, last.Length - 1);
+                        }
+                        currentNode.Props.Last().Value = last;
                         _openedTags++;
                         _closedTags++;
-                        currentNode.Depth = _depth;
-                        currentNode = currentNode.Parent;
                         currentNode.SelfClosing = true;
+                        currentNode = parents.Peek();
                         continue;
                     }
+                    parents.Push(currentNode);
                     _openedTags++;
                 }
                 bool emptyString = true;
                 i++;
                 if (currentNode.Tag == null)
                     continue;
+
+
                 while (i <= Html.Length - 1 && Html[i] != '<')
                 {
                     if (Html[i] != ' ' && Html[i] != '\t' && Html[i] != '\n')
@@ -109,28 +116,20 @@ public class HtmlParser
                     value += Html[i];
                     i++;
                 }
-                string closingTag = "";
                 if (Html[i + 1] == '/')
                 {
-                    i += 2;
-                    while (Html[i] != '>')
+                    if (parents.Peek().Tag == "html")
                     {
-                        closingTag += Html[i];
-                        i++;
-                    }
-                    string hashed = _validTags.FindKey(closingTag);
+                        ClosingTagValidator(Html, ref i, ref currentNode, value);
+                        return;
 
-                    if (hashed == null || closingTag != currentNode.Tag)
-                    {
-                        Console.WriteLine($"{currentNode.Tag}invalid closing tag");
-                        errorFlag = true;
-                        throw new Exception("pain");
                     }
-                    _closedTags++;
-                    currentNode.Value = value;
-                    _depth--;
-                    currentNode.Depth = _depth;
-                    currentNode = currentNode.Parent;
+
+                    currentNode = parents.Pop();
+                    ClosingTagValidator(Html, ref i, ref currentNode, value);
+                    currentNode = parents.Pop();
+                    parents.Push(currentNode);
+
                     continue;
                 }
                 if (!emptyString)
@@ -138,13 +137,11 @@ public class HtmlParser
                     GTree<string> childText = new GTree<string>();
                     childText.Tag = "Text"; //introduce custom text node so that i can keep track of the text in a container
                     childText.Value = value;
-                    childText.Parent = currentNode;
-                    childText.Depth = _depth;
                     currentNode?.AddChild(childText);
                 }
-                GTree<string> child = new GTree<string>();
 
-                child.Parent = currentNode;
+
+                GTree<string> child = new GTree<string>();
                 currentNode.AddChild(child);
                 currentNode.Value = value;
                 //get the opening tag and properties of the newly found child element
