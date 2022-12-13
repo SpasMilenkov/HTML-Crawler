@@ -10,6 +10,17 @@ namespace HTML_Crawler_Prototype
             public Node Next; //points to the next element in the list
             public Node Prev; // points to the past element in the list
             public T Value; //contains the value of the node
+
+            public Node()
+            {
+
+        }
+            public Node(Node node)
+            {
+                Value = node.Value;
+                Next = node.Next;
+                Prev = node.Prev;
+            }
         }
 
         private int _count = 0;
