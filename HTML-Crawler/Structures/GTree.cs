@@ -8,7 +8,7 @@ public class GTree<T>
     public T Tag { get; set; }
     //holds the node s props (id, class)
     //TODO: Convert to linked list
-    public List<string> Props = new List<string>();
+    public MyLinkedList<string> Props = new MyLinkedList<string>();
     //keep the connection to the parent element
     public GTree<T> Parent { get; set; }
     public string Value { get; set; }
@@ -60,5 +60,19 @@ public class GTree<T>
                 return true;
         }
         return false;
+    }
+
+    public string PropsString()
+    {
+        if (Props.Count() == 0)
+            return "";
+        var node = Props.First();
+        string props = " ";
+        while (node != null)
+        {
+            props += node.Value + ' ';
+            node = node.Next;
+        }
+        return props;
     }
 }
