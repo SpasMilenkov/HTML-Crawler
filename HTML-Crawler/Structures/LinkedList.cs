@@ -14,7 +14,7 @@ namespace HTML_Crawler_Prototype
             public Node()
             {
 
-        }
+            }
             public Node(Node node)
             {
                 Value = node.Value;
@@ -37,7 +37,7 @@ namespace HTML_Crawler_Prototype
             Node newNode = new Node
             {
                 Value = value,
-                Next = Tail,
+                Next = Head,
                 Prev = null
             };
             //if head isnt null we make its prev node point to our new node
@@ -66,7 +66,7 @@ namespace HTML_Crawler_Prototype
             }
             else
             {
-                Tail = newNode;
+                Head = newNode;
             }
 
             Tail = newNode;
