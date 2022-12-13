@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 
 namespace HTML_Crawler_Prototype;
 
@@ -10,9 +11,7 @@ public class GTree<T>
     //TODO: Convert to linked list
     public MyLinkedList<string> Props = new MyLinkedList<string>();
     //keep the connection to the parent element
-    public GTree<T> Parent { get; set; }
     public string Value { get; set; }
-    public int Depth { get; set; }
     public bool SelfClosing = false;
     //hold the child nodes that are connected to this one
     //using linked list is necessary because the html DOM is not binary tree
@@ -24,20 +23,11 @@ public class GTree<T>
 
     }
 
-    public GTree (GTree<T> newNode)
+    public GTree(GTree<T> newNode)
     {
-        Tag = newNode.Tag;  
-        Parent = newNode.Parent;
+        Tag = newNode.Tag;
         Value = newNode.Value;
-        Depth = newNode.Depth;
         SelfClosing = newNode.SelfClosing;
-        var child = newNode._childNodes.First();
-
-        while( child != null)
-        {
-            this.AddChild(child.Value);
-            child = child.Next;
-        }
     }
 
 
@@ -51,7 +41,7 @@ public class GTree<T>
         var node = Props.First();
         while (node != null)
         {
-            if (Props[i] == parameter)
+            if (node.Value == parameter)
                 return true;
             node = node.Next;
         }
