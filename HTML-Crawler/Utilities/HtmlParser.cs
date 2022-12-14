@@ -478,16 +478,15 @@ public class HtmlParser
         }
         _closedTags++;
         currentNode.Value = value;
-        depth--;
-        currentNode.Depth = depth;
         //problem
     }
     public void SetSubtree(string path, string input)
     {
         string[] pathSplitted = Helper.Split(Helper.Slice(path, 3, path.Length - 1), '/');
+        int depth = 0;
         MyLinkedList<GTree<string>> parentNodes = SearchNode(pathSplitted, HtmlTree);
         var parent = parentNodes.First();
-        MyLinkedList<GTree<string>> nodes = ParseSubTree(Helper.Slice(input, 1, input.Length-1), parent.Value.Depth);
+        MyLinkedList<GTree<string>> nodes = ParseSubTree(Helper.Slice(input, 1, input.Length-1));
         var node = nodes.First();
 
         while (parent != null)
@@ -500,13 +499,11 @@ public class HtmlParser
             }
             while(node != null)
             {
-                if (parent.Value._childNodes.First() == null)
-                    parent.Value._childNodes.AddFirst(node.Value);
-                else
                     parent.Value._childNodes.AddLast(node.Value);
 
                 node = node.Next;
             }
+            node = nodes.First();
             parent = parent.Next;
         }
     }
@@ -515,55 +512,47 @@ public class HtmlParser
 
     }
     private void PropSearch(
-       ref MyQueue<GTree<string>> unvisited,
+       ref MyQueue<Wrapper<GTree<string>>> unvisited,
        ref MyLinkedList<GTree<string>> subTrees,
        ref int depth,
        string tag,
        string param,
        int pathLength)
     {
+
         while (!unvisited.IsEmpty())
         {
             var currentNode = unvisited.Dequeue();
             //if the tag or prop are not matching just go the next tag
-            if (tag != currentNode.Tag || !currentNode.HasProp(param))
+            if (tag != currentNode.Value.Tag || !currentNode.Value.HasProp(param))
             {
-
-                //if the next element is one level deeper we
-                //reached the next level of the tree so we break of this algorithm
-                if (currentNode.Depth != unvisited.Peek()?.Depth && depth < pathLength && !unvisited.IsEmpty())
+                if (unvisited.Peek()?.Depth != currentNode.Depth)
                     break;
 
                 continue;
+
             }
             //if we are at the last element of the user path we insert the element in the list and return
             if (depth == pathLength - 1)
             {
-                if (subTrees.First() == null)
-                {
-                    subTrees.AddFirst(currentNode);
-                    return;
-                }
-
-                subTrees.AddLast(currentNode);
-                return;
-            }
-            //else we just add the children and continue
-            var childNode = currentNode._childNodes.First();
-            while (childNode != null)
-            {
-                unvisited.Enqueue(childNode.Value);
-                childNode = childNode.Next;
-            }
-            //same as the check above
-            if (currentNode.Depth != unvisited.Peek()?.Depth && depth < pathLength)
-            {
+                subTrees.AddLast(currentNode.Value);
                 break;
             }
+            //else we just add the children and continue
+            var childNode = currentNode.Value._childNodes.First();
+            while (childNode != null)
+            {
+                var childWrapper = new Wrapper<GTree<string>>(childNode.Value, currentNode.Depth + 1);
+                unvisited.Enqueue(childWrapper);
+                childNode = childNode.Next;
+            }
+            if (unvisited.Peek()?.Depth != currentNode.Depth)
+                break;
+
         }
     }
     private void PositionSearch(
-        ref MyQueue<GTree<string>> unvisited,
+        ref MyQueue<Wrapper<GTree<string>>> unvisited,
         ref MyLinkedList<GTree<string>> subTrees,
         ref int depth,
         string tag,
@@ -578,25 +567,20 @@ public class HtmlParser
         {
             var currentNode = unvisited.Dequeue();
 
-            if (tag == currentNode.Tag && index == elementPosition)
+            if (tag == currentNode.Value.Tag && index == elementPosition)
             {
                 //if it is the end of the path add the element directly to the list and return
                 if (depth == pathLength - 1)
                 {
-                    if (subTrees.First() == null)
-                    {
-                        subTrees.AddFirst(currentNode);
-                        return;
-                    }
-
-                    subTrees.AddLast(currentNode);
+                    subTrees.AddLast(currentNode.Value);
                     return;
                 }
                 //if it is not the end of the path add the children of the current element and increase the depth and index;
-                var childNode = currentNode._childNodes.First();
+                var childNode = currentNode.Value._childNodes.First();
                 while (childNode != null)
                 {
-                    unvisited.Enqueue(childNode.Value);
+                    var childWrapper = new Wrapper<GTree<string>>(childNode.Value, currentNode.Depth + 1);
+                    unvisited.Enqueue(childWrapper);
                     childNode = childNode.Next;
                 }
                 index++;
@@ -604,7 +588,7 @@ public class HtmlParser
                 return;
             }
             //if the tag is matching but we are not on the desired position just increment the index
-            else if (tag == currentNode.Tag && index != elementPosition)
+            else if (tag == currentNode.Value.Tag && index != elementPosition)
                 index++;
         }
     }
@@ -616,12 +600,12 @@ public class HtmlParser
         MyLinkedList<GTree<string>> subTrees = new MyLinkedList<GTree<string>>();
 
         //contains the nodes that are yet to be visited 
-        MyQueue<GTree<string>> unvisited = new MyQueue<GTree<string>>();
+        MyQueue<Wrapper<GTree<string>>> unvisited = new MyQueue<Wrapper<GTree<string>>>();
 
         //tracks the depth of the path in order for the checks to work
         int depth = 0;
-
-        unvisited.Enqueue(subtree);
+        var wrap = new Wrapper<GTree<string>>(subtree, 0);
+        unvisited.Enqueue(wrap);
         //main engine of the algorithm
         while (!unvisited.IsEmpty())
         {
@@ -657,34 +641,26 @@ public class HtmlParser
             }
             //the main algorithm that runs if we just seach by tags
             //gets the first node in the queue
-            GTree<string> currentNode = unvisited.Dequeue();
+            Wrapper<GTree<string>> currentNode = unvisited.Dequeue();
             //if the element s tag is matching and its not the last part of the user path we just add the children and continue
             if (depth < userPath.Length - 1 &&
-                (currentNode.Tag == userPath[depth] || userPath[depth] == "*"))
+                (currentNode.Value.Tag == userPath[depth] || userPath[depth] == "*"))
             {
-                var node = currentNode._childNodes.First();
+                var node = currentNode.Value._childNodes.First();
                 while (node != null)
                 {
-                    unvisited.Enqueue(node.Value);
+                    var childWrapper = new Wrapper<GTree<string>>(node.Value, currentNode.Depth + 1);
+                    unvisited.Enqueue(childWrapper);
                     node = node.Next;
                 }
             }
             //if its the last part of the path we add the node
             //there could be multiple results so we dont return
             if (depth == userPath.Length - 1 &&
-               (currentNode.Tag == userPath[depth] || userPath[depth] == "*"))
-            {
-                if (subTrees.First() == null)
-                    subTrees.AddFirst(currentNode);
-                
-                else
-                    subTrees.AddLast(currentNode);
-                
-            }
+               (currentNode.Value.Tag == userPath[depth] || userPath[depth] == "*"))
+                subTrees.AddLast(currentNode.Value);
 
-            //if the next element in the queue is with a different depth we reached the end of that tree level
-            //and go one level down
-            if (currentNode.Depth != unvisited.Peek()?.Depth && depth < userPath.Length)
+            if (unvisited.Peek()?.Depth != currentNode.Depth)
                 depth++;
 
         }
