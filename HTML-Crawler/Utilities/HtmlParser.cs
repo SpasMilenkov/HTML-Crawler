@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Net.NetworkInformation;
-using System.Security.Authentication.ExtendedProtection;
+using HTML_Crawler.Structures;
 using HTML_Crawler_Prototype;
-using Microsoft.VisualBasic.ApplicationServices;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Html_Crawler_Prototype.Utilities;
 
@@ -23,7 +17,6 @@ public class HtmlParser
     private int _openedTags = 0;
     //a hashmap containing all valid html tags
     private static Dictionary _validTags = new Dictionary(130);
-    private int _depth = 1;
     #endregion
 
     public void ParseHtml()
@@ -38,7 +31,6 @@ public class HtmlParser
             return;
         }
 
-        // GetOpeningTag(HtmlTree);
         IterativeParse();
         if (_closedTags != _openedTags)
         {
@@ -158,127 +150,128 @@ public class HtmlParser
             throw new Exception();
         }
     }
-    public void GetOpeningTag(GTree<string>? currentNode)
-    {
-        if (_indexer >= Html.Length - 1)
-            return;
-        //moves the indexer past the < symbol
-        _indexer++;
-        string nodeValue = "";
-        char c = Html[_indexer];
-        //checks for the end of the opening tag
-        //checks for incorrect opening of tags inside the opening tag
-        while (c != '>' && _indexer < Html.Length - 1 && c != '<')
-        {
-            nodeValue += c;
-            _indexer++;
-            c = Html[_indexer];
-        }
-        string[] props = Helper.Split(nodeValue, ' ');
-        currentNode.Tag = props[0];
-        Helper.Slice(props, 1);
-        string hashed = _validTags.FindKey(currentNode.Tag);
 
-        if (props.Length > 1)
-            for (int j = 1; j < props.Length; j++)
-                currentNode.Props.Add(props[j]);
+    //public void GetOpeningTag(GTree<string>? currentNode)
+    //{
+    //    if (_indexer >= Html.Length - 1)
+    //        return;
+    //    //moves the indexer past the < symbol
+    //    _indexer++;
+    //    string nodeValue = "";
+    //    char c = Html[_indexer];
+    //    //checks for the end of the opening tag
+    //    //checks for incorrect opening of tags inside the opening tag
+    //    while (c != '>' && _indexer < Html.Length - 1 && c != '<')
+    //    {
+    //        nodeValue += c;
+    //        _indexer++;
+    //        c = Html[_indexer];
+    //    }
+    //    string[] props = Helper.Split(nodeValue, ' ');
+    //    currentNode.Tag = props[0];
+    //    Helper.Slice(props, 1);
+    //    string hashed = _validTags.FindKey(currentNode.Tag);
 
-        if (hashed == null)
-        {
-            Console.WriteLine($"{currentNode.Tag}invalid tag");
-            errorFlag = true;
-            return;
-        }
-        currentNode.Depth = _depth;
-        if (Html[_indexer - 1] == '/')
-        {
-            if (hashed != "selfClosing")
-            {
-                Console.WriteLine($"{currentNode.Tag}invalid closing tag");
-                errorFlag = true;
-                return;
-            }
-            currentNode.Parent.AddChild(currentNode);
-            GetValue(currentNode.Parent);
-            return;
-        }
-        _openedTags++;
-        GetValue(currentNode);
-    }
+    //    if (props.Length > 1)
+    //        for (int j = 1; j < props.Length; j++)
+    //            currentNode.Props.Add(props[j]);
 
-    public void GetValue(GTree<string>? currentNode)
-    {
-        //if current node is null that means we reached the last lvl of depth of the html
-        //then we reach the bottom of the recursion
-        if (_indexer >= Html.Length - 1)
-            return;
+    //    if (hashed == null)
+    //    {
+    //        Console.WriteLine($"{currentNode.Tag}invalid tag");
+    //        errorFlag = true;
+    //        return;
+    //    }
+    //    currentNode.Depth = _depth;
+    //    if (Html[_indexer - 1] == '/')
+    //    {
+    //        if (hashed != "selfClosing")
+    //        {
+    //            Console.WriteLine($"{currentNode.Tag}invalid closing tag");
+    //            errorFlag = true;
+    //            return;
+    //        }
+    //        currentNode.Parent.AddChild(currentNode);
+    //        GetValue(currentNode.Parent);
+    //        return;
+    //    }
+    //    _openedTags++;
+    //    GetValue(currentNode);
+    //}
 
-        //need to move past the > char 
-        _indexer++;
-        char c = Html[_indexer];
-        string textValue = "";
-        string closingTag = "";
-        bool emptyString = true;
-        while (c != '<' && _indexer < Html.Length - 1)
-        {
-            if (c != ' ' && c != '\t' && c != '\n')
-                emptyString = false;
-            textValue += c;
-            _indexer++;
-            c = Html[_indexer];
-        }
-        //checking if the next thing beginning with < is a closing tag and another node
-        if (Html[_indexer + 1] == '/')
-        {
-            _indexer += 2;
-            c = Html[_indexer];
-            while (c != '>')
-            {
-                closingTag += c;
-                _indexer++;
-                c = Html[_indexer];
-            }
-            string hashed = _validTags.FindKey(closingTag);
+    //public void GetValue(GTree<string>? currentNode)
+    //{
+    //    //if current node is null that means we reached the last lvl of depth of the html
+    //    //then we reach the bottom of the recursion
+    //    if (_indexer >= Html.Length - 1)
+    //        return;
 
-            if (hashed == null || closingTag != currentNode.Tag)
-            {
-                Console.WriteLine($"{currentNode.Tag}invalid closing tag");
-                errorFlag = true;
-                return;
-            }
-            _closedTags++;
-            currentNode.Value = textValue;
-            _depth--;
-            currentNode.Depth = _depth;
-            GetValue(currentNode.Parent); //get one level deeper into the html
-            return;
-        }
-        //parsing text as a child node for elements that have more than one child
-        // covers the case when:
-        //<div>
-        //      Some text        <--------------------------.
-        //      <p>Paragraph text</p>                       |
-        //      another text            (if we ignore the paragraph and take this as a string value
-        //</div>                        we will end up with "Some text another text" appended on first position)
-        if (!emptyString)
-        {
-            GTree<string> childText = new GTree<string>();
-            childText.Tag = "Text"; //introduce custom text node so that i can keep track of the text in a container
-            childText.Value = textValue;
-            childText.Parent = currentNode;
-            childText.Depth = _depth;
-            currentNode?.AddChild(childText);
-        }
-        //create a new node for the next html container and add it to the parent
-        GTree<string> child = new GTree<string>();
+    //    //need to move past the > char 
+    //    _indexer++;
+    //    char c = Html[_indexer];
+    //    string textValue = "";
+    //    string closingTag = "";
+    //    bool emptyString = true;
+    //    while (c != '<' && _indexer < Html.Length - 1)
+    //    {
+    //        if (c != ' ' && c != '\t' && c != '\n')
+    //            emptyString = false;
+    //        textValue += c;
+    //        _indexer++;
+    //        c = Html[_indexer];
+    //    }
+    //    //checking if the next thing beginning with < is a closing tag and another node
+    //    if (Html[_indexer + 1] == '/')
+    //    {
+    //        _indexer += 2;
+    //        c = Html[_indexer];
+    //        while (c != '>')
+    //        {
+    //            closingTag += c;
+    //            _indexer++;
+    //            c = Html[_indexer];
+    //        }
+    //        string hashed = _validTags.FindKey(closingTag);
 
-        child.Parent = currentNode;
-        currentNode.AddChild(child);
+    //        if (hashed == null || closingTag != currentNode.Tag)
+    //        {
+    //            Console.WriteLine($"{currentNode.Tag}invalid closing tag");
+    //            errorFlag = true;
+    //            return;
+    //        }
+    //        _closedTags++;
+    //        currentNode.Value = textValue;
+    //        _depth--;
+    //        currentNode.Depth = _depth;
+    //        GetValue(currentNode.Parent); //get one level deeper into the html
+    //        return;
+    //    }
+    //    //parsing text as a child node for elements that have more than one child
+    //    // covers the case when:
+    //    //<div>
+    //    //      Some text        <--------------------------.
+    //    //      <p>Paragraph text</p>                       |
+    //    //      another text            (if we ignore the paragraph and take this as a string value
+    //    //</div>                        we will end up with "Some text another text" appended on first position)
+    //    if (!emptyString)
+    //    {
+    //        GTree<string> childText = new GTree<string>();
+    //        childText.Tag = "Text"; //introduce custom text node so that i can keep track of the text in a container
+    //        childText.Value = textValue;
+    //        childText.Parent = currentNode;
+    //        childText.Depth = _depth;
+    //        currentNode?.AddChild(childText);
+    //    }
+    //    //create a new node for the next html container and add it to the parent
+    //    GTree<string> child = new GTree<string>();
 
-        _depth++;
-        //get the opening tag and properties of the newly found child element
-        GetOpeningTag(child);
-    }
+    //    child.Parent = currentNode;
+    //    currentNode.AddChild(child);
+
+    //    _depth++;
+    //    //get the opening tag and properties of the newly found child element
+    //    GetOpeningTag(child);
+    //}
     //parse the TagTable file and load the correct html tags in the 
     public void LoadTagsDB()
     {
@@ -308,7 +301,7 @@ public class HtmlParser
 
         if (path.Length <= 1)
         {
-            return PrintNode(HtmlTree, "");
+            return PrintNode(HtmlTree, "", 0);
         }
         else
         {
@@ -317,10 +310,7 @@ public class HtmlParser
 
             while (node != null)
             {
-                if (node.Value._childNodes.First() == null)
-                {
-                    result += PrintNode(node.Value, "");
-                }
+                result += PrintNode(node.Value, "", 0);
                 node = node.Next;
             }
         }
@@ -342,10 +332,9 @@ public class HtmlParser
             node = node.Next;
         }
     }
-    public MyLinkedList<GTree<string>> ParseSubTree(string input, int depth)
+    public MyLinkedList<GTree<string>> ParseSubTree(string input)
     {
         MyStack<GTree<string>> parents = new MyStack<GTree<string>>();
-        int parentDepth = depth;
         MyLinkedList<GTree<string>> nodes = new MyLinkedList<GTree<string>>();
         GTree<string> currentNode = new GTree<string>();
 
@@ -356,7 +345,7 @@ public class HtmlParser
             if (input[i] == '<' && input[i + 1] == '/')
             {
                 currentNode = parents.Pop();
-                ClosingTagValidator(ref depth, input, ref i,ref currentNode, value);
+                ClosingTagValidator(input, ref i,ref currentNode, value);
                 continue;
             }
             else if(input[i] == '<')
@@ -373,26 +362,20 @@ public class HtmlParser
 
                 if (nodeEls.Length > 1)
                     for (int j = 1; j < nodeEls.Length; j++)
-                        currentNode.Props.Add(nodeEls[j]);
-                depth++;
-                currentNode.Depth = depth;
+                        currentNode.Props.AddLast(nodeEls[j]);
+
                 if (input[i - 1] == '/')
                 {
                     if (hashed != "selfClosing")
                     {
                         throw new Exception();
                     }
-                    depth--;
                     _openedTags++;
                     _closedTags++;
-                    currentNode.Depth = depth;
-                    currentNode = currentNode.Parent;
                     currentNode.SelfClosing = true;
 
-                    if (nodes.First().Value.Depth == currentNode.Depth)
-                    {
-                        nodes.AddLast(currentNode);
-                    }
+                    nodes.AddLast(currentNode);
+                    
 
                     continue;
                 }
@@ -414,22 +397,27 @@ public class HtmlParser
                     value += input[i];
                     i++;
                 }
+                if (input[i + 1] == '/')
+                {
+                    currentNode = parents.Pop();
+                    ClosingTagValidator(input, ref i, ref currentNode, value);
 
+                    continue;
+                }
                 if (!emptyString)
                 {
                     GTree<string> childText = new GTree<string>();
                     childText.Tag = "Text"; //introduce custom text node so that i can keep track of the text in a container
                     childText.Value = value;
-                    childText.Parent = currentNode;
-                    childText.Depth = depth;
-                    currentNode?.AddChild(childText);
-                }
 
-                if (input[i + 1] == '/')
-                {
-                    currentNode = parents.Pop();
-                    ClosingTagValidator(ref depth, input, ref i, ref currentNode, value);
-                    continue;
+                    if (_openedTags == _closedTags)
+                    {
+                        GTree<string> gTreeString = new GTree<string>(childText);
+                        nodes.AddLast(gTreeString);
+
+                    }
+                    else
+                        currentNode?.AddChild(childText);
                 }
             }
   
@@ -442,21 +430,16 @@ public class HtmlParser
                 currentNode = child;
                 continue;
             }
-            if (nodes.First() == null)
-            {
-                GTree<string> gTree = new GTree<string>(currentNode);
-                nodes.AddFirst(gTree);
-            }
-            else
-            {
-                GTree<string> gTree = new GTree<string>(currentNode);
-                nodes.AddLast(gTree);
-            }
+            GTree<string> gTree = Copy(currentNode);
+
+            currentNode = new GTree<string>();
+            nodes.AddLast(gTree);
+            
+           
         }
         return nodes;
     }
     private void ClosingTagValidator(
-        ref int depth,
         string input,
         ref int p,
         ref GTree<string> currentNode,
@@ -499,7 +482,7 @@ public class HtmlParser
             }
             while(node != null)
             {
-                    parent.Value._childNodes.AddLast(node.Value);
+                 parent.Value._childNodes.AddLast(node.Value);
 
                 node = node.Next;
             }
@@ -534,7 +517,7 @@ public class HtmlParser
             }
             //if we are at the last element of the user path we insert the element in the list and return
             if (depth == pathLength - 1)
-            {
+            { 
                 subTrees.AddLast(currentNode.Value);
                 break;
             }
@@ -583,7 +566,6 @@ public class HtmlParser
                     unvisited.Enqueue(childWrapper);
                     childNode = childNode.Next;
                 }
-                index++;
                 depth++;
                 return;
             }
@@ -609,7 +591,6 @@ public class HtmlParser
         //main engine of the algorithm
         while (!unvisited.IsEmpty())
         {
-
             //checks if targument in the path is complex aka p[2] or table[@id='table2']
             if (depth >= userPath.Length)
                 break;
@@ -683,7 +664,7 @@ public class HtmlParser
                 {
                     for (int i = 0; i < depth; i++)
                         result += "   ";
-
+                    
                     result = PrintNode(firstChild.Value, result, ++depth);
                     depth--;
                 }
@@ -713,6 +694,10 @@ public class HtmlParser
         return result;
     }
 
+    public void Copy()
+    {
+
+    }
     public GTree<string> DFSCopy(GTree<string> og, GTree<string> copy)
     {
         if (og._childNodes.First() != null)
