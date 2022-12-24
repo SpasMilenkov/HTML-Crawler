@@ -558,6 +558,10 @@ public class HtmlParser
                     subTrees.AddLast(currentNode.Value);
                     return;
                 }
+                while (!unvisited.IsEmpty())
+                {
+                    unvisited.Dequeue();
+                }
                 //if it is not the end of the path add the children of the current element and increase the depth and index;
                 var childNode = currentNode.Value._childNodes.First();
                 while (childNode != null)
@@ -566,7 +570,6 @@ public class HtmlParser
                     unvisited.Enqueue(childWrapper);
                     childNode = childNode.Next;
                 }
-                depth++;
                 return;
             }
             //if the tag is matching but we are not on the desired position just increment the index
@@ -588,6 +591,7 @@ public class HtmlParser
         int depth = 0;
         var wrap = new Wrapper<GTree<string>>(subtree, 0);
         unvisited.Enqueue(wrap);
+        int elementPosition = 0;
         //main engine of the algorithm
         while (!unvisited.IsEmpty())
         {
@@ -609,6 +613,7 @@ public class HtmlParser
                 if (int.TryParse(param, out elementPosition))
                 {
                     PositionSearch(ref unvisited, ref subTrees, ref depth, tag, elementPosition, userPath.Length);
+                    depth++;
                     continue;
                 }
                 else //the algorithm that iterates if we are searching by attribute
