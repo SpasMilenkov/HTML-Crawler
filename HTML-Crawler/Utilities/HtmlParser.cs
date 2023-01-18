@@ -701,11 +701,71 @@ public class HtmlParser
         return result;
     }
 
-    public void Copy()
+    public void Copy(string[] copyFrom, string[] copyTo)
     {
+        copyFrom = Helper.Slice(copyFrom, 1, copyFrom.Length);
+        copyTo = Helper.Slice(copyTo, 1, copyTo.Length);
+
+        var originals = SearchNode(copyFrom, HtmlTree);
+        var destinations = SearchNode(copyTo, HtmlTree);
+        var node = originals.First();
+        var destination = destinations.First();
+
+        while (node != null)
+        {
+            if (!node.Value.Copied)
+            {
+                while (destination != null)
+                {
+                    if(node.Value == destination.Value)
+                        continue;
+
+                    if (destination.Value.Copied)
+                    {
+                        var parents = SearchNode(Helper.Slice(copyTo, 0, copyTo.Length - 1), HtmlTree);
+                        var parent = parents.First();
+                        while (parent != null)
+                        {
+                            parent.Value._childNodes.Remove(destination);
+                            parent.Value._childNodes.AddLast(node.Value);
+                            parent = parent.Next;
+                        }
+                    }
+                    else
+                        destination.Value.AddChild(node.Value);
+
+                    destination = destination.Next;
+                }
+                node.Value.Copied = true;
+            }
+            else
+    {
+                GTree<string> rebuild = new GTree<string>(node.Value);
+                rebuild = DeepCopy(node.Value, rebuild);
+                while (destination != null)
+                {
+                    if (destination.Value.Copied)
+                    {
+                        var parents = SearchNode(Helper.Slice(copyTo, 0, copyTo.Length - 1), HtmlTree);
+                        var parent = parents.First();
+                        while (parent != null)
+                        {
+                            parent.Value._childNodes.Remove(destination);
+                            parent.Value._childNodes.AddLast(node.Value);
+                            parent = parent.Next;
+                        }
+                    }
+                    else
+                        destination.Value.AddChild(rebuild);
+
+                    destination = destination.Next;
+                }
 
     }
-    public GTree<string> DFSCopy(GTree<string> og, GTree<string> copy)
+            node = node.Next;
+        }
+    }
+    public GTree<string> DeepCopy(GTree<string> og, GTree<string> copy)
     {
         if (og._childNodes.First() != null)
         {
