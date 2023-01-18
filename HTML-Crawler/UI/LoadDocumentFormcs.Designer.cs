@@ -38,6 +38,7 @@
             // 
             this.TextBoxInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
             resources.ApplyResources(this.TextBoxInput, "TextBoxInput");
+            this.TextBoxInput.ForeColor = System.Drawing.Color.White;
             this.TextBoxInput.Name = "TextBoxInput";
             // 
             // label1
@@ -63,10 +64,10 @@
             this.Controls.Add(this.LoadButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.TextBoxInput);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.ForeColor = System.Drawing.Color.White;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.Name = "LoadDocument";
-            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 

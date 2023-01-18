@@ -26,6 +26,8 @@ namespace HTML_Crawler.UI
         private void LoadButton_Click(object sender, EventArgs e)
         {
             _router.LoadDocument(TextBoxInput.Text);
+
+
             this.Close();
         }
     }
