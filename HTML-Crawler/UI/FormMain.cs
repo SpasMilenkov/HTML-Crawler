@@ -5,6 +5,9 @@ namespace HTML_Crawler
     public partial class FormMain : Form
     {
         Router _router = new Router();
+        Point _point = new Point();
+        int _accumulatedHeight = 0;
+        int maxWidth = 0;
         public FormMain()
         {
             InitializeComponent();
