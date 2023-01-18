@@ -68,7 +68,22 @@ namespace HTML_Crawler.Routers
         {
             string html = File.ReadAllText(path);
             _parser.Html = html;
+            string[] pathSplit = Helper.Split(path, '\\');
+
+            for (int i = 0; i < pathSplit.Length-1; i++)
+            {
+                Directory += pathSplit[i] + '\\';
+            }
             _parser.ParseHtml();
         }
+        public void SaveDocument(string path)
+        {
+            using(var fs = File.Create(path))
+            {
+                byte[] html = new UTF8Encoding(true).GetBytes(_parser.PrintInput("\"//\""));
+                fs.Write(html, 0, html.Length);
+            }
+        }
+        public GTree<string> GetTree() => _parser.HtmlTree;
     }
 }
