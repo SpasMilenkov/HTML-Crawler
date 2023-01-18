@@ -346,10 +346,10 @@ public class HtmlParser
             if (input[i] == '<' && input[i + 1] == '/')
             {
                 currentNode = parents.Pop();
-                ClosingTagValidator(input, ref i,ref currentNode, value);
+                ClosingTagValidator(input, ref i, ref currentNode, value);
                 continue;
             }
-            else if(input[i] == '<')
+            else if (input[i] == '<')
             {
                 i++;
                 while (input[i] != '>')
@@ -387,9 +387,9 @@ public class HtmlParser
             i++;
             bool emptyString = true;
             //explodes
-            if (currentNode.Tag == null)
-                continue;
-            if(i <= input.Length - 1)
+            //if (currentNode.Tag == null)
+            //    continue;
+            if (i <= input.Length - 1)
             {
                 while (i <= input.Length - 1 && input[i] != '<')
                 {
@@ -431,7 +431,8 @@ public class HtmlParser
                 currentNode = child;
                 continue;
             }
-            GTree<string> gTree = Copy(currentNode);
+            GTree<string> gTree = new GTree<string>();
+            gTree = DeepCopy(currentNode, gTree);
 
             currentNode = new GTree<string>();
             nodes.AddLast(gTree);
