@@ -471,18 +471,18 @@ public class HtmlParser
         int depth = 0;
         MyLinkedList<GTree<string>> parentNodes = SearchNode(pathSplitted, HtmlTree);
         var parent = parentNodes.First();
-        MyLinkedList<GTree<string>> nodes = ParseSubTree(Helper.Slice(input, 1, input.Length-1));
+        MyLinkedList<GTree<string>> nodes = ParseSubTree(Helper.Slice(input, 1, input.Length - 1));
         var node = nodes.First();
 
         while (parent != null)
         {
             var firstChild = parent.Value._childNodes.First();
-            while(firstChild != null)
+            while (firstChild != null)
             {
                 parent.Value._childNodes.Remove(firstChild);
                 firstChild = firstChild.Next;
             }
-            while(node != null)
+            while (node != null)
             {
                  parent.Value._childNodes.AddLast(node.Value);
 
