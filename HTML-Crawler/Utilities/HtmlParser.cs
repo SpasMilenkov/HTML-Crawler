@@ -103,8 +103,9 @@ public class HtmlParser
 
                 while (i <= Html.Length - 1 && Html[i] != '<')
                 {
-                    if (Html[i] != ' ' && Html[i] != '\t' && Html[i] != '\n')
+                    if (Html[i] != ' ' && Html[i] != '\t' && Html[i] != '\n' && Html[i] != '\r')
                         emptyString = false;
+                    if(!emptyString)
                     value += Html[i];
                     i++;
                 }
