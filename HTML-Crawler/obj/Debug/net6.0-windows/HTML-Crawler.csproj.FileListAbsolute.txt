@@ -23,3 +23,5 @@ C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-wind
 C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\HTML-Crawler.genruntimeconfig.cache
 C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\ref\HTML-Crawler.dll
 C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\bin\Debug\net6.0-windows\TagTable.txt
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\HTML_Crawler.UI.SaveDocumentForm.resources
+C:\Users\Spas Milenkov\Documents\HTML-Crawler\HTML-Crawler\obj\Debug\net6.0-windows\HTML_Crawler.Properties.Resources.resources

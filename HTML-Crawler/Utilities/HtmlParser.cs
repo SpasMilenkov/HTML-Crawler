@@ -19,6 +19,7 @@ public class HtmlParser
     private static Dictionary _validTags = new Dictionary(130);
     #endregion
 
+
     public void ParseHtml()
     {
         LoadTagsDB();
@@ -106,7 +107,7 @@ public class HtmlParser
                     if (Html[i] != ' ' && Html[i] != '\t' && Html[i] != '\n' && Html[i] != '\r')
                         emptyString = false;
                     if(!emptyString)
-                    value += Html[i];
+                        value += Html[i];
                     i++;
                 }
                 if (Html[i + 1] == '/')
@@ -291,7 +292,7 @@ public class HtmlParser
     //Parse the user query
     public string PrintInput(string input)
     {
-        
+
         GTree<string> subTree = HtmlTree;
         input = Helper.Slice(input, 2, input.Length - 1);
         string[] path = Helper.Split(input, '/');
@@ -319,6 +320,7 @@ public class HtmlParser
     }
     public void SetInput(string path, string input)
     {
+
         string[] pathSplitted = Helper.Split(Helper.Slice(path, 3, path.Length - 1), '/');
         MyLinkedList<GTree<string>> nodes = SearchNode(pathSplitted, HtmlTree);
 
@@ -376,7 +378,7 @@ public class HtmlParser
                     currentNode.SelfClosing = true;
 
                     nodes.AddLast(currentNode);
-                    
+
 
                     continue;
                 }
@@ -421,7 +423,7 @@ public class HtmlParser
                         currentNode?.AddChild(childText);
                 }
             }
-  
+
             GTree<string> child = new GTree<string>();
 
             if (_openedTags != _closedTags)
@@ -436,8 +438,8 @@ public class HtmlParser
 
             currentNode = new GTree<string>();
             nodes.AddLast(gTree);
-            
-           
+
+
         }
         return nodes;
     }
@@ -484,7 +486,7 @@ public class HtmlParser
             }
             while (node != null)
             {
-                 parent.Value._childNodes.AddLast(node.Value);
+                parent.Value._childNodes.AddLast(node.Value);
 
                 node = node.Next;
             }
@@ -492,9 +494,9 @@ public class HtmlParser
             parent = parent.Next;
         }
     }
-    public void CopyInput(string input)
+    public void CopyInput(string[] material, string[] target)
     {
-
+        var originals = SearchNode(material, HtmlTree);
     }
     private void PropSearch(
        ref MyQueue<Wrapper<GTree<string>>> unvisited,
@@ -519,7 +521,7 @@ public class HtmlParser
             }
             //if we are at the last element of the user path we insert the element in the list and return
             if (depth == pathLength - 1)
-            { 
+            {
                 subTrees.AddLast(currentNode.Value);
                 break;
             }
@@ -610,7 +612,6 @@ public class HtmlParser
                 string param = Helper.Slice(complexInput[1], 0, complexInput[1].Length - 1);
 
                 //the int that contains the position of the parameter if we are searching by position in the document
-                int elementPosition = 0;
 
                 if (int.TryParse(param, out elementPosition))
                 {
@@ -671,7 +672,7 @@ public class HtmlParser
                 {
                     for (int i = 0; i < depth; i++)
                         result += "   ";
-                    
+
                     result = PrintNode(firstChild.Value, result, ++depth);
                     depth--;
                 }
@@ -683,7 +684,7 @@ public class HtmlParser
                 {
                     for (int i = 1; i < depth - 1; i++)
                         result += "   ";
-                    
+
                     result += $"</{node.Tag}>" + System.Environment.NewLine;
                 }
                 firstChild = firstChild.Next;
@@ -739,7 +740,7 @@ public class HtmlParser
                 node.Value.Copied = true;
             }
             else
-    {
+            {
                 GTree<string> rebuild = new GTree<string>(node.Value);
                 rebuild = DeepCopy(node.Value, rebuild);
                 while (destination != null)
@@ -761,7 +762,7 @@ public class HtmlParser
                     destination = destination.Next;
                 }
 
-    }
+            }
             node = node.Next;
         }
     }
@@ -775,7 +776,7 @@ public class HtmlParser
                 if (firstChild.Value._childNodes.First != null)
                 {
                     GTree<string> child = new GTree<string>(firstChild.Value);
-                    DFSCopy(firstChild.Value, child);
+                    copy = DeepCopy(firstChild.Value, child);
                     copy._childNodes.AddFirst(child);
                 }
                 else
@@ -786,6 +787,10 @@ public class HtmlParser
                 firstChild = firstChild.Next;
             }
 
+        }
+        else
+        {
+            copy = new GTree<string>(og);
         }
         return copy;
     }
