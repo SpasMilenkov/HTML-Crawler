@@ -13,6 +13,7 @@ public class GTree<T>
     //keep the connection to the parent element
     public string Value { get; set; }
     public bool SelfClosing = false;
+    public bool Copied = false;
     //hold the child nodes that are connected to this one
     //using linked list is necessary because the html DOM is not binary tree
     //the amount of child nodes are not limited to 2
