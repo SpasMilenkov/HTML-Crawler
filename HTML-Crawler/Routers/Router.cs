@@ -49,10 +49,10 @@ namespace HTML_Crawler.Routers
                     return "Invalid input";
             }
         }
-        private string IdentifyWord(string input)
+        private string IdentifyWord(string input, int i)
         {
             string word = "";
-            for (int i = 0; i < input.Length; i++)
+            for (; i < input.Length; i++)
             {
                 if (input[i] == ' ')
                 {
@@ -61,6 +61,7 @@ namespace HTML_Crawler.Routers
                 }
                 word += input[i];
             }
+
             return word;
         }
 
