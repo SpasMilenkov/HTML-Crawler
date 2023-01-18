@@ -1,5 +1,13 @@
 using HTML_Crawler.Routers;
 using HTML_Crawler.UI;
+using HTML_Crawler_Prototype;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
+using System.Reflection.Metadata;
+using System.Security.Policy;
+using static System.Net.Mime.MediaTypeNames;
+
 namespace HTML_Crawler
 {
     public partial class FormMain : Form
@@ -14,6 +22,10 @@ namespace HTML_Crawler
             this.BackColor = Color.FromArgb(38, 38, 46);
             this.textBoxOutput.BackColor = Color.FromArgb(61, 61, 77);
             this.textBoxInput.BackColor = Color.FromArgb(61, 61, 77);
+            this.panel1.BackColor = Color.FromArgb(61, 61, 77);
+            this.SaveDocumentLabel.BackColor = Color.FromArgb(32, 190, 125);
+            this.VisualizeLabel.BackColor = Color.FromArgb(32, 190, 125);
+            maxWidth = Canvas.Width;
             WindowState = FormWindowState.Maximized;
         }
 
