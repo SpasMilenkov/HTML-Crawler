@@ -114,7 +114,7 @@ namespace HTML_Crawler
                 _accumulatedHeight += (int)size.Height + 30;
 
                 if (maxWidth < size.Width)
-                    maxWidth = (int)size.Width;
+                    maxWidth = (int)size.Width + 50;
 
                 if (_accumulatedHeight > Canvas.Height || maxWidth > Canvas.Width)
                 {
