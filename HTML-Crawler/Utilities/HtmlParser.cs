@@ -470,33 +470,64 @@ public class HtmlParser
     public void SetSubtree(string path, string input)
     {
         string[] pathSplitted = Helper.Split(Helper.Slice(path, 3, path.Length - 1), '/');
-        int depth = 0;
         MyLinkedList<GTree<string>> parentNodes = SearchNode(pathSplitted, HtmlTree);
-        var parent = parentNodes.First();
+        var destination = parentNodes.First();
         MyLinkedList<GTree<string>> nodes = ParseSubTree(Helper.Slice(input, 1, input.Length - 1));
         var node = nodes.First();
 
+        while (node != null)
+        {
+            if (!node.Value.Copied)
+            {
+                while (destination != null)
+                {
+                    if (node.Value == destination.Value)
+                        continue;
+
+                    if (destination.Value.Copied)
+                    {
+                        var parents = SearchNode(Helper.Slice(pathSplitted, 0, pathSplitted.Length - 1), HtmlTree);
+                        var parent = parents.First();
         while (parent != null)
         {
-            var firstChild = parent.Value._childNodes.First();
-            while (firstChild != null)
-            {
-                parent.Value._childNodes.Remove(firstChild);
-                firstChild = firstChild.Next;
-            }
-            while (node != null)
-            {
-                parent.Value._childNodes.AddLast(node.Value);
+                            parent.Value._childNodes.Remove(destination);
+                            parent.Value._childNodes.AddLast(node.Value);
+                            parent = parent.Next;
+                        }
+                    }
+                    else
+                        destination.Value.AddChild(node.Value);
 
-                node = node.Next;
+                    destination = destination.Next;
+                }
+                node.Value.Copied = true;
             }
-            node = nodes.First();
-            parent = parent.Next;
+            else
+            {
+                GTree<string> rebuild = new GTree<string>(node.Value);
+                rebuild = DeepCopy(node.Value, rebuild);
+                while (destination != null)
+            {
+                    if (destination.Value.Copied)
+                    {
+                        var parents = SearchNode(Helper.Slice(pathSplitted, 0, pathSplitted.Length - 1), HtmlTree);
+                        var parent = parents.First();
+                        while (parent != null)
+            {
+                            parent.Value._childNodes.Remove(destination);
+                parent.Value._childNodes.AddLast(node.Value);
+                            parent = parent.Next;
+                        }
+                    }
+                    else
+                        destination.Value.AddChild(rebuild);
+
+                    destination = destination.Next;
+            }
+
         }
+            node = node.Next;
     }
-    public void CopyInput(string[] material, string[] target)
-    {
-        var originals = SearchNode(material, HtmlTree);
     }
     private void PropSearch(
        ref MyQueue<Wrapper<GTree<string>>> unvisited,
