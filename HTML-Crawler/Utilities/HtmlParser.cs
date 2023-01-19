@@ -328,9 +328,27 @@ public class HtmlParser
 
         while (node != null)
         {
-            if (node.Value._childNodes.First() == null)
+            if (node.Value.Copied)
             {
+                GTree<string> rebuild = new GTree<string>(node.Value);
+                rebuild = DeepCopy(node.Value, rebuild);
+                rebuild._childNodes = new MyLinkedList<GTree<string>>();
+                var parents = SearchNode(Helper.Slice(pathSplitted, 0, pathSplitted.Length - 1), HtmlTree);
+                var parent = parents.First();
+                while (parent != null)
+                {
+                    parent.Value._childNodes.Remove(node);
+                    parent.Value._childNodes.AddLast(rebuild);
+                    rebuild.Value = input;
+
+                    parent = parent.Next;
+                }
+            }
+            else
+            {
+                node.Value._childNodes = new MyLinkedList<GTree<string>>();
                 node.Value.Value = input;
+
             }
             node = node.Next;
         }
@@ -488,8 +506,8 @@ public class HtmlParser
                     {
                         var parents = SearchNode(Helper.Slice(pathSplitted, 0, pathSplitted.Length - 1), HtmlTree);
                         var parent = parents.First();
-        while (parent != null)
-        {
+                        while (parent != null)
+                        {
                             parent.Value._childNodes.Remove(destination);
                             parent.Value._childNodes.AddLast(node.Value);
                             parent = parent.Next;
@@ -507,15 +525,15 @@ public class HtmlParser
                 GTree<string> rebuild = new GTree<string>(node.Value);
                 rebuild = DeepCopy(node.Value, rebuild);
                 while (destination != null)
-            {
+                {
                     if (destination.Value.Copied)
                     {
                         var parents = SearchNode(Helper.Slice(pathSplitted, 0, pathSplitted.Length - 1), HtmlTree);
                         var parent = parents.First();
                         while (parent != null)
-            {
+                        {
                             parent.Value._childNodes.Remove(destination);
-                parent.Value._childNodes.AddLast(node.Value);
+                            parent.Value._childNodes.AddLast(node.Value);
                             parent = parent.Next;
                         }
                     }
@@ -523,11 +541,11 @@ public class HtmlParser
                         destination.Value.AddChild(rebuild);
 
                     destination = destination.Next;
-            }
+                }
 
-        }
+            }
             node = node.Next;
-    }
+        }
     }
     private void PropSearch(
        ref MyQueue<Wrapper<GTree<string>>> unvisited,
