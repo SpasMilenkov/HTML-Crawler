@@ -45,8 +45,21 @@ namespace HTML_Crawler
 
         private void SaveDocumentLabel_Click(object sender, EventArgs e)
         {
-            SaveDocumentForm saveForm = new SaveDocumentForm(_router);
-            saveForm.ShowDialog();
+            Stream saveFile;
+
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "HTML file (*.html)|*.html";
+            saveFileDialog1.Title = "Save an HTML File";
+            saveFileDialog1.AddExtension = true;
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if ((saveFile = saveFileDialog1.OpenFile()) != null)
+                {
+                    _router.SaveDocument(saveFile);
+                    saveFile.Close();
+                }
+            }
         }
 
         private void VisualizeLabel_Click(object sender, EventArgs e)
@@ -62,7 +75,6 @@ namespace HTML_Crawler
             _point = new Point();
             _accumulatedHeight = 10;
             maxWidth = 10;
-            //GC.Collect();
         }
         private Bitmap DFSGraphic(GTree<string> node, ref Bitmap plot)
         {
@@ -120,10 +132,7 @@ namespace HTML_Crawler
                 {
                     ResizeBitmap(ref plot, ref g);
                 }
-                if (node.Tag == "p" || node.Tag == "h" || node.Tag == "div")
-                {
-                    g.DrawString(node.Value, new Font("Courier New", 16), Brushes.Black, rectf);
-                }
+                //if (node.Tag == "p" || node.Tag == "h" || node.Tag == "div" )
 
                 if (node.Tag == "td")
                 {
@@ -135,6 +144,10 @@ namespace HTML_Crawler
                 if (node.Tag == "a")
                     g.DrawString(node.Value, new Font("Courier New", 16, FontStyle.Underline), Brushes.Blue, rectf);
 
+                else if (node.Value != "")
+                {
+                    g.DrawString(node.Value, new Font("Courier New", 16), Brushes.Black, rectf);
+                }
                 if (node.Tag == "img")
                 {
                     var prop = node.Props.First();

@@ -1,0 +1,32 @@
+<html >
+   <body >
+         <p> AAA </p>
+         <p> AAA </p>
+         <p id='p3' > AAA </p>
+         <div >
+               <div> Text4 </div>
+               I am text
+   		 
+               <p> Text5 </p>
+         </div>
+         <table >
+               <tr >
+                     <td> 11 </td>
+               </tr>
+               <tr >
+                     <td> 22 </td>
+               </tr>
+         </table>
+         <table  id='table2' >
+               <tr  id='tr1' >
+                     <td> 33 </td>
+               </tr>
+               <tr >
+                     <td> 44 </td>
+               </tr>
+         </table>
+         <a href="http://https://www.w3schools.com" > w3schools </a>
+         <img src="img_girl.bmp" />
+         <img src="artorias_cropped.png" />
+   </body>
+</html>

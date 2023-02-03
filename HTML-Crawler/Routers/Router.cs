@@ -25,7 +25,7 @@ namespace HTML_Crawler.Routers
                 case "SET":
 
                     string path = IdentifyWord(input, command.Length + 1);
-                    string filler = IdentifyWord(input, path.Length + 2 + command.Length);
+                    string filler = Helper.Slice(input, path.Length + 2 + command.Length);
 
                     if (filler[1] == '<')
                     {
@@ -79,13 +79,10 @@ namespace HTML_Crawler.Routers
             }
             _parser.ParseHtml();
         }
-        public void SaveDocument(string path)
+        public void SaveDocument(Stream saveFile)
         {
-            using(var fs = File.Create(path))
-            {
-                byte[] html = new UTF8Encoding(true).GetBytes(_parser.PrintInput("\"//\""));
-                fs.Write(html, 0, html.Length);
-            }
+            byte[] html = new UTF8Encoding(true).GetBytes(_parser.PrintInput("\"//\""));
+            saveFile.Write(html, 0, html.Length);
         }
         public GTree<string> GetTree() => _parser.HtmlTree;
     }

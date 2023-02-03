@@ -8,7 +8,6 @@ public class GTree<T>
     //holds the node tag
     public T Tag { get; set; }
     //holds the node s props (id, class)
-    //TODO: Convert to linked list
     public MyLinkedList<string> Props = new MyLinkedList<string>();
     //keep the connection to the parent element
     public string Value { get; set; }

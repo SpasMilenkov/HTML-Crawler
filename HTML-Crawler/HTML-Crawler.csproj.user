@@ -7,8 +7,5 @@
     <Compile Update="UI\LoadDocumentFormcs.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="UI\SaveDocumentForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
   </ItemGroup>
 </Project>
